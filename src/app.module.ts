@@ -9,6 +9,7 @@ import { CartItem } from 'recipe/entities/CartItem';
 import { Produk } from 'recipe/entities/Produk';
 import { User } from 'recipe/entities/Users';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AnggotaModule } from './anggota/anggota.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: true,
       }),
     }),
+    AnggotaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
