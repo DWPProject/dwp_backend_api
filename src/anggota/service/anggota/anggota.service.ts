@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Anggota } from 'recipe/entities/Anggota';
 import {
@@ -12,23 +12,46 @@ export class AnggotaService {
   constructor(
     @InjectRepository(Anggota) private anggotaRepository: Repository<Anggota>,
   ) {}
-  async getallDataAnggota() {
-    return await this.anggotaRepository.find();
+  async getAllDataAnggota() {
+    const data = await this.anggotaRepository.find();
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get Data',
+      data: data,
+    };
   }
 
-  createAnggota(createAnggotaParams: CreateAnggotaParams) {
+  async createAnggota(createAnggotaParams: CreateAnggotaParams) {
     const newAnggota = this.anggotaRepository.create({
       ...createAnggotaParams,
     });
+    await this.anggotaRepository.save(newAnggota);
 
-    return this.anggotaRepository.save(newAnggota);
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Create Data',
+    };
   }
 
-  updateAnggota(updateAnggotaParams: UpdateAnggotaParams, id: number) {
-    return this.anggotaRepository.update({ id }, { ...updateAnggotaParams });
+  async updateAnggota(updateAnggotaParams: UpdateAnggotaParams, id: number) {
+    await this.anggotaRepository.update({ id }, { ...updateAnggotaParams });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Update Data',
+    };
   }
 
-  deleteAnggota(id: number) {
-    return this.anggotaRepository.delete({ id });
+  async deleteAnggota(id: number) {
+    await this.anggotaRepository.delete({ id });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Delete Data',
+    };
   }
 }
