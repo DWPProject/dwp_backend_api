@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AnggotaModule } from './anggota/anggota.module';
 import { RouterModule } from '@nestjs/core';
 import { CartItemModule } from './cart-item/cart-item.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { CartItemModule } from './cart-item/cart-item.module';
     }),
     AnggotaModule,
     CartItemModule,
+    ProductModule,
   ],
 })
 export class AppModule {}
