@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Anggota } from 'recipe/entities/Anggota';
 import { Berita } from 'recipe/entities/Berita';
@@ -10,10 +8,22 @@ import { Produk } from 'recipe/entities/Produk';
 import { User } from 'recipe/entities/Users';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AnggotaModule } from './anggota/anggota.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    RouterModule.register([
+      {
+        path: 'api',
+        children: [
+          {
+            path: 'admin',
+            module: AnggotaModule,
+          },
+        ],
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -29,7 +39,5 @@ import { AnggotaModule } from './anggota/anggota.module';
     }),
     AnggotaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
