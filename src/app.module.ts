@@ -9,6 +9,7 @@ import { User } from 'recipe/entities/Users';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AnggotaModule } from './anggota/anggota.module';
 import { RouterModule } from '@nestjs/core';
+import { CartItemModule } from './cart-item/cart-item.module';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { RouterModule } from '@nestjs/core';
           {
             path: 'admin',
             module: AnggotaModule,
+          },
+          {
+            path: 'admin',
+            module: CartItemModule,
           },
         ],
       },
@@ -38,6 +43,7 @@ import { RouterModule } from '@nestjs/core';
       }),
     }),
     AnggotaModule,
+    CartItemModule,
   ],
 })
 export class AppModule {}
