@@ -4,7 +4,6 @@ import { Produk } from 'recipe/entities/Produk';
 import {
   CreateProductParams,
   UpdateProductParams,
-  UpdateStokProductParams,
 } from 'recipe/utils/Product.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { Repository } from 'typeorm';
@@ -42,30 +41,52 @@ export class ProductService {
     };
   }
 
-  async updateStokProduct(
-    updateStokProductParams: UpdateStokProductParams,
-    id: string,
-  ) {
-    await this.produkRepository.update({ id }, { ...updateStokProductParams });
-
-    return {
-      statusCode: HttpStatus.OK,
-      status: 'Success',
-      message: 'Success Update Data',
-    };
-  }
-
-  async sellProduct(
-    id: string,
-    updateStokProductParams: UpdateStokProductParams,
-  ) {
-    await this.updateStokProduct(updateStokProductParams, id);
+  async sellProduct(id: string) {
     await this.produkRepository.update({ id }, { jual: true });
 
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
       message: 'Success Sell Product',
+    };
+  }
+
+  async getDataSellProduct() {
+    const data = await this.produkRepository.find({
+      where: {
+        jual: true,
+      },
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get Sell Product',
+      data: data,
+    };
+  }
+  async getDataBankProduct() {
+    const data = await this.produkRepository.find({
+      where: {
+        jual: false,
+      },
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get Bank Product',
+      data: data,
+    };
+  }
+
+  async deleteProduct(id: string) {
+    await this.produkRepository.delete({ id });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Delete Data',
     };
   }
 }
