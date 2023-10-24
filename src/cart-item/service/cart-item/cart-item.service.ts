@@ -24,6 +24,21 @@ export class CartItemService {
     };
   }
 
+  async getDataCartItem(id: string) {
+    const listItem = this.cartItemRepository.find({
+      where: {
+        user_id: id,
+      },
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get Data Item',
+      data: listItem,
+    };
+  }
+
   async deleteItem(id: number) {
     await this.cartItemRepository.delete({ id });
   }

@@ -10,3 +10,7 @@ export class UpdateCartItemParams {
   note: string;
   quantity: number;
 }
+
+export class GetDataItemParams {
+  user_id: string;
+}

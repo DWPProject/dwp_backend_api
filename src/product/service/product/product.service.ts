@@ -32,7 +32,17 @@ export class ProductService {
   }
 
   async updateProduct(updateProductParams: UpdateProductParams, id: string) {
-    await this.produkRepository.update({ id }, { ...updateProductParams });
+    const result = await this.produkRepository.update(
+      { id },
+      { ...updateProductParams },
+    );
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -42,7 +52,14 @@ export class ProductService {
   }
 
   async sellProduct(id: string) {
-    await this.produkRepository.update({ id }, { jual: true });
+    const result = await this.produkRepository.update({ id }, { jual: true });
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -81,7 +98,14 @@ export class ProductService {
   }
 
   async deleteProduct(id: string) {
-    await this.produkRepository.delete({ id });
+    const result = await this.produkRepository.delete({ id });
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,

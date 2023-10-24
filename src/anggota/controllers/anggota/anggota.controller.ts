@@ -8,8 +8,12 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAnggotaDto, UpdateAnggotaDto } from 'recipe/dto/Anggota.dto';
+import { multerOptions } from 'recipe/utils/uploadFile';
 import { AnggotaService } from 'src/anggota/service/anggota/anggota.service';
 
 @Controller('anggota')
@@ -29,8 +33,19 @@ export class AnggotaController {
   }
 
   @Post()
-  async createAnggota(@Body() createAnggotaDto: CreateAnggotaDto) {
+  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  async createAnggota(
+    @UploadedFile() foto: Express.Multer.File,
+    @Body() createAnggotaDto: CreateAnggotaDto,
+  ) {
     try {
+      if (!foto) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'File Not Null',
+        };
+      }
+      createAnggotaDto.foto = foto.path;
       return await this.anggotaService.createAnggota(createAnggotaDto);
     } catch (error) {
       return {
@@ -41,11 +56,20 @@ export class AnggotaController {
   }
 
   @Put(':id')
+  @UseInterceptors(FileInterceptor('foto', multerOptions))
   async updateAnggota(
+    @UploadedFile() foto: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAnggotaDto: UpdateAnggotaDto,
   ) {
     try {
+      if (!foto) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'File Not Null',
+        };
+      }
+      updateAnggotaDto.foto = foto.path;
       return await this.anggotaService.updateAnggota(updateAnggotaDto, id);
     } catch (error) {
       return {

@@ -36,7 +36,17 @@ export class AnggotaService {
   }
 
   async updateAnggota(updateAnggotaParams: UpdateAnggotaParams, id: number) {
-    await this.anggotaRepository.update({ id }, { ...updateAnggotaParams });
+    const result = await this.anggotaRepository.update(
+      { id },
+      { ...updateAnggotaParams },
+    );
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,
@@ -46,7 +56,14 @@ export class AnggotaService {
   }
 
   async deleteAnggota(id: number) {
-    await this.anggotaRepository.delete({ id });
+    const result = await this.anggotaRepository.delete({ id });
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
 
     return {
       statusCode: HttpStatus.OK,

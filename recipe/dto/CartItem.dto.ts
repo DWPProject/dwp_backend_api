@@ -10,3 +10,7 @@ export class UpdateCartItemDto {
   note: string;
   quantity: number;
 }
+
+export class GetDataItemDto {
+  user_id: string;
+}

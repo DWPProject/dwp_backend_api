@@ -4,7 +4,6 @@ export class CreateProductDto {
   id_penjual: string;
   foto: string;
   stok: number;
-  jual: number;
   kategori: string;
 }
 export class UpdateProductDto {
@@ -12,6 +11,5 @@ export class UpdateProductDto {
   harga: number;
   foto: string;
   stok: number;
-  jual: number;
   kategori: string;
 }
