@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Post,
   Param,
-  ParseUUIDPipe,
   Put,
   Body,
   UseInterceptors,
@@ -92,7 +91,7 @@ export class ProductController {
     }
   }
 
-  @Post()
+  @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createProduct(
     @UploadedFile() foto: Express.Multer.File,

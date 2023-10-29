@@ -11,6 +11,8 @@ import { RouterModule } from '@nestjs/core';
 import { AnggotaModule } from './admin/anggota/anggota.module';
 import { CartItemModule } from './user/cart-item/cart-item.module';
 import { ProductModule } from './admin/product/product.module';
+import { ShopModule } from './user/shop/shop.module';
+import { AuthModule } from './user/auth/auth.module';
 
 @Module({
   imports: [
@@ -39,6 +41,14 @@ import { ProductModule } from './admin/product/product.module';
                 path: '/',
                 module: CartItemModule,
               },
+              {
+                path: '/',
+                module: ShopModule,
+              },
+              {
+                path: '/',
+                module: AuthModule,
+              },
             ],
           },
         ],
@@ -60,6 +70,8 @@ import { ProductModule } from './admin/product/product.module';
     AnggotaModule,
     CartItemModule,
     ProductModule,
+    ShopModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

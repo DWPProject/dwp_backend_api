@@ -15,6 +15,7 @@ export class CartItemService {
     const newItem = this.cartItemRepository.create({
       ...createCartItemParams,
     });
+
     await this.cartItemRepository.save(newItem);
 
     return {
@@ -25,11 +26,12 @@ export class CartItemService {
   }
 
   async getDataCartItem(id: string) {
-    const listItem = this.cartItemRepository.find({
+    const listItem = await this.cartItemRepository.find({
       where: {
         user_id: id,
       },
     });
+    // console.log(listItem);
 
     return {
       statusCode: HttpStatus.OK,
@@ -39,9 +41,9 @@ export class CartItemService {
     };
   }
 
-  async deleteItem(id: number) {
-    await this.cartItemRepository.delete({ id });
-  }
+  // async deleteItem(id: number) {
+  //   await this.cartItemRepository.delete({ id });
+  // }
 
-  async updateItem() {}
+  // async updateItem() {}
 }
