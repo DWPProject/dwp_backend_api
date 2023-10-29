@@ -14,7 +14,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto, UpdateProductDto } from 'recipe/dto/Product.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
-import { ProductService } from 'src/product/service/product/product.service';
+import { ProductService } from '../../service/product/product.service';
 
 @Controller('product')
 export class ProductController {

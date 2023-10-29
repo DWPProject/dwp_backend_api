@@ -14,7 +14,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAnggotaDto, UpdateAnggotaDto } from 'recipe/dto/Anggota.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
-import { AnggotaService } from 'src/anggota/service/anggota/anggota.service';
+import { AnggotaService } from '../../service/anggota/anggota.service';
 
 @Controller('anggota')
 export class AnggotaController {

@@ -7,10 +7,10 @@ import { CartItem } from 'recipe/entities/CartItem';
 import { Produk } from 'recipe/entities/Produk';
 import { User } from 'recipe/entities/Users';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AnggotaModule } from './anggota/anggota.module';
 import { RouterModule } from '@nestjs/core';
-import { CartItemModule } from './cart-item/cart-item.module';
-import { ProductModule } from './product/product.module';
+import { AnggotaModule } from './admin/anggota/anggota.module';
+import { CartItemModule } from './user/cart-item/cart-item.module';
+import { ProductModule } from './admin/product/product.module';
 
 @Module({
   imports: [
@@ -21,15 +21,25 @@ import { ProductModule } from './product/product.module';
         children: [
           {
             path: 'admin',
-            module: AnggotaModule,
+            children: [
+              {
+                path: '/',
+                module: AnggotaModule,
+              },
+              {
+                path: '/',
+                module: ProductModule,
+              },
+            ],
           },
           {
-            path: 'admin',
-            module: CartItemModule,
-          },
-          {
-            path: 'admin',
-            module: ProductModule,
+            path: 'user',
+            children: [
+              {
+                path: '/',
+                module: CartItemModule,
+              },
+            ],
           },
         ],
       },

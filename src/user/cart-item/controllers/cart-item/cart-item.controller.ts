@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { CreateCartItemDto } from 'recipe/dto/CartItem.dto';
-import { CartItemService } from 'src/cart-item/service/cart-item/cart-item.service';
+import { CartItemService } from '../../service/cart-item/cart-item.service';
 
 @Controller('cartItem')
 export class CartItemController {
