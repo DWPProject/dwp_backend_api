@@ -13,7 +13,7 @@ export class CreateUserSellerParams {
   repassword: string;
   username: string;
   telepon: string;
-  type: number;
+  type_seller: number;
   foto: string;
 }
 

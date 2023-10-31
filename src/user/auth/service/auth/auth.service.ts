@@ -35,6 +35,7 @@ export class AuthService {
       username: createUserParams.username,
       profil: createUserParams.foto,
       telepon: createUserParams.telepon,
+      type_seller: null,
       level: 'user',
     });
 
@@ -65,7 +66,7 @@ export class AuthService {
       username: createUserSellerParams.username,
       profil: createUserSellerParams.foto,
       telepon: createUserSellerParams.telepon,
-      type_seller: createUserSellerParams.type,
+      type_seller: createUserSellerParams.type_seller,
       level: 'penjual',
     });
 
@@ -79,16 +80,15 @@ export class AuthService {
   }
 
   async getDataSeller() {
-    const userSeller = this.userRepository.find({
+    const userSeller = await this.userRepository.find({
       where: {
         level: 'penjual',
       },
     });
-
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
-      message: 'Success Register',
+      message: 'Success Get Data Seller',
       payload: userSeller,
     };
   }

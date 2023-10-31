@@ -12,13 +12,6 @@ export class CreateUserSellerDto {
   repassword: string;
   username: string;
   telepon: string;
-  type: number;
+  type_seller: number;
   foto: string;
 }
-//   export class UpdateProductDto {
-//     nama: string;
-//     harga: number;
-//     foto: string;
-//     stok: number;
-//     kategori: string;
-//   }

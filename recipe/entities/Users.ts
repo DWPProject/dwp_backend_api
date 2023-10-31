@@ -20,7 +20,7 @@ export class User {
   @Column()
   profil: string;
 
-  @Column()
+  @Column({ nullable: true })
   type_seller: number;
 
   @Column()

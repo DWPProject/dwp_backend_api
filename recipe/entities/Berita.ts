@@ -15,6 +15,12 @@ export class Berita {
   gambar: string;
 
   @Column()
+  kategori: string;
+
+  @Column()
+  penulis: string;
+
+  @Column()
   createdAt: Date;
 
   @Column()
