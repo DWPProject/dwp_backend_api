@@ -25,13 +25,12 @@ export class CartItemService {
     };
   }
 
-  async getDataCartItem(id: string) {
+  async getDataCartItem(userId: string) {
     const listItem = await this.cartItemRepository.find({
       where: {
-        user_id: id,
+        user_id: userId,
       },
     });
-    // console.log(listItem);
 
     return {
       statusCode: HttpStatus.OK,

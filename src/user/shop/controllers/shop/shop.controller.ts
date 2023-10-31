@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
-import { CreateCartItemDto } from 'recipe/dto/CartItem.dto';
+import { CreateCartItemDto, GetDataItemDto } from 'recipe/dto/CartItem.dto';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { CartItemService } from 'src/user/cart-item/service/cart-item/cart-item.service';
 
@@ -23,9 +23,9 @@ export class ShopController {
   }
 
   @Get('/cart')
-  async getCartUser(@Body() id_user: string) {
+  async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
-      return await this.cartService.getDataCartItem(id_user);
+      return await this.cartService.getDataCartItem(getDataItemDto.user_id);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -37,7 +37,6 @@ export class ShopController {
   @Post('/')
   async addToCart(@Body() createCartItemDto: CreateCartItemDto) {
     try {
-      console.log(createCartItemDto);
       return await this.cartService.createItem(createCartItemDto);
     } catch (error) {
       return {
