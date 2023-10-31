@@ -21,5 +21,8 @@ export class User {
   profil: string;
 
   @Column()
+  type_seller: number;
+
+  @Column()
   level: string;
 }

@@ -13,6 +13,7 @@ import { CartItemModule } from './user/cart-item/cart-item.module';
 import { ProductModule } from './admin/product/product.module';
 import { ShopModule } from './user/shop/shop.module';
 import { AuthModule } from './user/auth/auth.module';
+import { SellerModule } from './seller/seller.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { AuthModule } from './user/auth/auth.module';
     ProductModule,
     ShopModule,
     AuthModule,
+    SellerModule,
   ],
 })
 export class AppModule {}

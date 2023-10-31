@@ -21,5 +21,8 @@ export class BuyerHistory {
   payment: string;
 
   @Column()
+  purchase: number;
+
+  @Column()
   order_date: Date;
 }

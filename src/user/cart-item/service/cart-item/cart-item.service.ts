@@ -39,10 +39,4 @@ export class CartItemService {
       data: listItem,
     };
   }
-
-  // async deleteItem(id: number) {
-  //   await this.cartItemRepository.delete({ id });
-  // }
-
-  // async updateItem() {}
 }
