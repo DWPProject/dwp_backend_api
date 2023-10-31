@@ -1,7 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'recipe/entities/Users';
-import { CreateUserParams } from 'recipe/utils/User.utils';
+import {
+  CreateUserParams,
+  CreateUserSellerParams,
+} from 'recipe/utils/User.utils';
 import { HashPassword } from 'recipe/utils/hashPassword';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { Repository } from 'typeorm';
@@ -43,8 +46,8 @@ export class AuthService {
       message: 'Success Register',
     };
   }
-  async createUserPenjual(createUserParams: CreateUserParams) {
-    if (createUserParams.password != createUserParams.repassword) {
+  async createUserPenjual(createUserSellerParams: CreateUserSellerParams) {
+    if (createUserSellerParams.password != createUserSellerParams.repassword) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         status: 'Failed',
@@ -53,16 +56,17 @@ export class AuthService {
     }
 
     const idUser = RandomStringGenerator();
-    const hashPass = await HashPassword(createUserParams.password);
+    const hashPass = await HashPassword(createUserSellerParams.password);
 
     const newUser = this.userRepository.create({
       id: idUser,
-      email: createUserParams.email,
+      email: createUserSellerParams.email,
       password: hashPass,
-      username: createUserParams.username,
-      profil: createUserParams.foto,
-      telepon: createUserParams.telepon,
-      level: 'user',
+      username: createUserSellerParams.username,
+      profil: createUserSellerParams.foto,
+      telepon: createUserSellerParams.telepon,
+      type_seller: createUserSellerParams.type,
+      level: 'penjual',
     });
 
     await this.userRepository.save(newUser);
@@ -71,6 +75,21 @@ export class AuthService {
       statusCode: HttpStatus.OK,
       status: 'Success',
       message: 'Success Register',
+    };
+  }
+
+  async getDataSeller() {
+    const userSeller = this.userRepository.find({
+      where: {
+        level: 'penjual',
+      },
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Register',
+      payload: userSeller,
     };
   }
 }

@@ -7,6 +7,16 @@ export class CreateUserParams {
   foto: string;
 }
 
+export class CreateUserSellerParams {
+  email: string;
+  password: string;
+  repassword: string;
+  username: string;
+  telepon: string;
+  type: number;
+  foto: string;
+}
+
 export class UpdateUserParams {
   username: string;
   telepon: string;
