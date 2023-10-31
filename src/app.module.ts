@@ -14,6 +14,7 @@ import { ProductModule } from './admin/product/product.module';
 import { ShopModule } from './user/shop/shop.module';
 import { AuthModule } from './user/auth/auth.module';
 import { SellerModule } from './admin/seller/seller.module';
+import { KontenModule } from './admin/konten/konten.module';
 
 @Module({
   imports: [
@@ -36,6 +37,10 @@ import { SellerModule } from './admin/seller/seller.module';
               {
                 path: '/',
                 module: SellerModule,
+              },
+              {
+                path: '/',
+                module: KontenModule,
               },
             ],
           },
@@ -78,6 +83,7 @@ import { SellerModule } from './admin/seller/seller.module';
     ShopModule,
     AuthModule,
     SellerModule,
+    KontenModule,
   ],
 })
 export class AppModule {}
