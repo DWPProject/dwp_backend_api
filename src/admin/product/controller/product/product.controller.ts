@@ -9,16 +9,19 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto, UpdateProductDto } from 'recipe/dto/Product.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from '../../service/product/product.service';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
+  @UseGuards(AuthGuard)
   @Get('bankProduct')
   async getProductBankProduct() {
     try {
@@ -31,6 +34,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put('bankProduct/:id')
   async sellProduct(@Param('id') id: string) {
     try {
@@ -43,6 +47,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('sellProduct')
   async getSellProduct() {
     try {
@@ -55,6 +60,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteDataProduct(@Param('id') id: string) {
     try {
@@ -67,6 +73,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async updateProduct(
@@ -91,6 +98,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createProduct(

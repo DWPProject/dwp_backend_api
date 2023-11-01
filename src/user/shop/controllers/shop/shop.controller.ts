@@ -1,6 +1,14 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateCartItemDto, GetDataItemDto } from 'recipe/dto/CartItem.dto';
 import { ProductService } from 'src/admin/product/service/product/product.service';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 import { CartItemService } from 'src/user/cart-item/service/cart-item/cart-item.service';
 
 @Controller('shop')
@@ -22,6 +30,7 @@ export class ShopController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('/cart')
   async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
@@ -34,6 +43,7 @@ export class ShopController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/')
   async addToCart(@Body() createCartItemDto: CreateCartItemDto) {
     try {

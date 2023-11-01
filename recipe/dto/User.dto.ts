@@ -15,3 +15,8 @@ export class CreateUserSellerDto {
   type_seller: number;
   foto: string;
 }
+
+export class LoginUserDto {
+  email: string;
+  password: string;
+}

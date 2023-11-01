@@ -1,11 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'recipe/entities/Users';
 import {
   CreateUserParams,
   CreateUserSellerParams,
+  LoginUserParams,
 } from 'recipe/utils/User.utils';
-import { HashPassword } from 'recipe/utils/hashPassword';
+import { ComparePassword, HashPassword } from 'recipe/utils/hashPassword';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { Repository } from 'typeorm';
 
@@ -14,6 +16,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async createUser(createUserParams: CreateUserParams) {
@@ -90,6 +93,39 @@ export class AuthService {
       status: 'Success',
       message: 'Success Get Data Seller',
       payload: userSeller,
+    };
+  }
+
+  async loginUser(loginUserParams: LoginUserParams) {
+    const data = await this.userRepository.findOne({
+      where: {
+        email: loginUserParams.email,
+      },
+    });
+    if (!data) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Email or Password wrong',
+      };
+    }
+
+    if (!(await ComparePassword(loginUserParams.password, data.password))) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Email or Password wrong',
+      };
+    }
+
+    const payload = {
+      id: data.id,
+      email: data.email,
+      level: data.level,
+    };
+
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 }

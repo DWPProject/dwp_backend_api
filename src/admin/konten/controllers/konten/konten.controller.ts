@@ -8,12 +8,14 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { KontenService } from '../../service/konten/konten.service';
 import { CreateBeritaDto, UpdateBeritaDto } from 'recipe/dto/Berita.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'recipe/utils/uploadFile';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 
 @Controller('konten')
 export class KontenController {
@@ -31,6 +33,7 @@ export class KontenController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/')
   @UseInterceptors(FileInterceptor('gambar', multerOptions))
   async createNewKonten(
@@ -54,6 +57,7 @@ export class KontenController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put('/:id')
   @UseInterceptors(FileInterceptor('gambar', multerOptions))
   async updateKontem(
@@ -90,6 +94,7 @@ export class KontenController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteDataKonten(@Param('id') id: number) {
     try {

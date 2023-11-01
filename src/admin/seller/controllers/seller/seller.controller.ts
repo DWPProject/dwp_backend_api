@@ -5,17 +5,20 @@ import {
   HttpStatus,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserSellerDto } from 'recipe/dto/User.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 import { AuthService } from 'src/user/auth/service/auth/auth.service';
 
 @Controller('seller')
 export class SellerController {
   constructor(private userService: AuthService) {}
 
+  @UseGuards(AuthGuard)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createAccSeller(
@@ -39,6 +42,7 @@ export class SellerController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('/')
   async getDataUserSeller() {
     try {

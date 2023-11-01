@@ -9,12 +9,14 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAnggotaDto, UpdateAnggotaDto } from 'recipe/dto/Anggota.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AnggotaService } from '../../service/anggota/anggota.service';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 
 @Controller('anggota')
 export class AnggotaController {
@@ -32,6 +34,7 @@ export class AnggotaController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createAnggota(
@@ -55,6 +58,7 @@ export class AnggotaController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async updateAnggota(
@@ -79,6 +83,7 @@ export class AnggotaController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteAnggota(@Param('id', ParseIntPipe) id: number) {
     try {
