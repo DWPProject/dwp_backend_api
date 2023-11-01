@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  SetMetadata,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { CreateBeritaDto, UpdateBeritaDto } from 'recipe/dto/Berita.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AuthGuard } from 'src/middleware/auth.middleware';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
 
 @Controller('konten')
 export class KontenController {
@@ -33,7 +35,9 @@ export class KontenController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('gambar', multerOptions))
   async createNewKonten(
@@ -57,7 +61,9 @@ export class KontenController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put('/:id')
   @UseInterceptors(FileInterceptor('gambar', multerOptions))
   async updateKontem(
@@ -94,7 +100,9 @@ export class KontenController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteDataKonten(@Param('id') id: number) {
     try {

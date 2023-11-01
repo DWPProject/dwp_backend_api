@@ -10,18 +10,22 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto, UpdateProductDto } from 'recipe/dto/Product.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from '../../service/product/product.service';
 import { AuthGuard } from 'src/middleware/auth.middleware';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Get('bankProduct')
   async getProductBankProduct() {
     try {
@@ -34,7 +38,9 @@ export class ProductController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put('bankProduct/:id')
   async sellProduct(@Param('id') id: string) {
     try {
@@ -47,7 +53,9 @@ export class ProductController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Get('sellProduct')
   async getSellProduct() {
     try {
@@ -60,7 +68,9 @@ export class ProductController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteDataProduct(@Param('id') id: string) {
     try {
@@ -73,7 +83,9 @@ export class ProductController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put(':id')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async updateProduct(
@@ -98,7 +110,9 @@ export class ProductController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createProduct(

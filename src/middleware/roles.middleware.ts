@@ -5,14 +5,22 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { jwtConstants } from 'src/user/auth/service/jwtConstant';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+export class RolesMiddleware implements CanActivate {
+  constructor(
+    private jwtService: JwtService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const allowedRoles = this.reflector.get<string[]>(
+      'roles',
+      context.getHandler(),
+    );
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
@@ -22,7 +30,9 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      console.log(payload);
+      if (!allowedRoles.includes(payload.level)) {
+        throw new UnauthorizedException();
+      }
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();

@@ -4,6 +4,7 @@ import {
   Get,
   HttpStatus,
   Post,
+  SetMetadata,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -12,13 +13,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserSellerDto } from 'recipe/dto/User.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AuthGuard } from 'src/middleware/auth.middleware';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
 import { AuthService } from 'src/user/auth/service/auth/auth.service';
 
 @Controller('seller')
 export class SellerController {
   constructor(private userService: AuthService) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createAccSeller(
@@ -42,7 +46,9 @@ export class SellerController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Get('/')
   async getDataUserSeller() {
     try {

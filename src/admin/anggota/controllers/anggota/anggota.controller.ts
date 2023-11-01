@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  SetMetadata,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +18,8 @@ import { CreateAnggotaDto, UpdateAnggotaDto } from 'recipe/dto/Anggota.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AnggotaService } from '../../service/anggota/anggota.service';
 import { AuthGuard } from 'src/middleware/auth.middleware';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('anggota')
 export class AnggotaController {
@@ -34,7 +37,9 @@ export class AnggotaController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post()
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createAnggota(
@@ -58,7 +63,9 @@ export class AnggotaController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put(':id')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async updateAnggota(
@@ -83,7 +90,9 @@ export class AnggotaController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteAnggota(@Param('id', ParseIntPipe) id: number) {
     try {
