@@ -6,6 +6,7 @@ import {
   CreateUserParams,
   CreateUserSellerParams,
   LoginUserParams,
+  forgotPasswordParams,
 } from 'recipe/utils/User.utils';
 import { ComparePassword, HashPassword } from 'recipe/utils/hashPassword';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
@@ -127,5 +128,50 @@ export class AuthService {
     return {
       accessToken: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async forgotPassword(forgotPasswordParams: forgotPasswordParams){
+    const data = await this.userRepository.findOne({
+      where: {
+        email: forgotPasswordParams.email
+      }
+    })
+    console.log(data)
+
+    if(!data){
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Email not registered',
+      };
+    }
+
+    if(forgotPasswordParams.newPassword !== forgotPasswordParams.reNewPassword){
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'failed',
+        message: 'Password and Repassword do not match'
+      }
+    }
+
+    const hashPass = await HashPassword(forgotPasswordParams.newPassword);
+
+    const result = await this.userRepository.update(
+      {email : data.email}, {password: hashPass}
+    )
+
+    if (result.affected === 0 ) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'failed',
+        message: 'Email not Registered'
+      }
+    }
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      status: 'successs',
+      message: 'Success CHange Password'
+    }
   }
 }

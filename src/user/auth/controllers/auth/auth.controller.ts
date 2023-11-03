@@ -9,7 +9,7 @@ import {
 import { AuthService } from '../../service/auth/auth.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'recipe/utils/uploadFile';
-import { CreateUserDto, LoginUserDto } from 'recipe/dto/User.dto';
+import { CreateUserDto, LoginUserDto, forgotPasswordDto } from 'recipe/dto/User.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -47,6 +47,18 @@ export class AuthController {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         error: `${error}`,
       };
+    }
+  }
+
+  @Post('/forgotPassword')
+  async forgotPassword(@Body() forgotPasswordDto: forgotPasswordDto) {
+    try {
+      return await this.authService.forgotPassword(forgotPasswordDto)
+    } catch(error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      }
     }
   }
 }

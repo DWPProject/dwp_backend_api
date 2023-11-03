@@ -27,3 +27,9 @@ export class UpdateUserParams {
   telepon: string;
   profil: string;
 }
+
+export class forgotPasswordParams {
+  email: string;
+  newPassword: string;
+  reNewPassword: string;
+}
