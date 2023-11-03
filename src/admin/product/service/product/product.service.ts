@@ -6,7 +6,7 @@ import {
   UpdateProductParams,
 } from 'recipe/utils/Product.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -95,6 +95,31 @@ export class ProductService {
       message: 'Success Get Bank Product',
       data: data,
     };
+  }
+
+  async orderProduct(id: string, stok: number, manager: EntityManager) {
+    return manager.transaction(async (transactionalManager) => {
+      const result = await transactionalManager.findOne(Produk, {
+        where: {
+          id: id,
+        },
+        lock: {
+          mode: 'pessimistic_write',
+        },
+      });
+
+      if (!result) {
+        throw new Error(`Produk dengan ID ${id} tidak ditemukan.`);
+      }
+
+      if (result.stok < stok) {
+        throw new Error(`Stok produk tidak mencukupi.`);
+      }
+
+      result.stok -= stok;
+
+      await transactionalManager.save(Produk, result);
+    });
   }
 
   async deleteProduct(id: string) {
