@@ -13,5 +13,5 @@ export class UpdateCartItemDto {
 
 export class GetDataItemDto {
   user_id: string;
-  user_id1: string;
+  purchase: number;
 }

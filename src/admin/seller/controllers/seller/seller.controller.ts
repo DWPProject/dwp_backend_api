@@ -47,8 +47,8 @@ export class SellerController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Get('/')
   async getDataUserSeller() {
     try {

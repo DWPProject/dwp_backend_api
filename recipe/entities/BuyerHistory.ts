@@ -18,7 +18,13 @@ export class BuyerHistory {
   status: string;
 
   @Column()
+  note: string;
+
+  @Column()
   payment: string;
+
+  @Column()
+  payment_status: boolean;
 
   @Column()
   purchase: number;

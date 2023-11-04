@@ -16,7 +16,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto, UpdateProductDto } from 'recipe/dto/Product.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from '../../service/product/product.service';
-import { AuthGuard } from 'src/middleware/auth.middleware';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
 
 @Controller('product')

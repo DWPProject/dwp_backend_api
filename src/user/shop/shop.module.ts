@@ -5,10 +5,12 @@ import { ProductService } from 'src/admin/product/service/product/product.servic
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Produk } from 'recipe/entities/Produk';
 import { CartItem } from 'recipe/entities/CartItem';
+import { BuyerHistoryService } from '../buyer-history/service/buyer-history/buyer-history.service';
+import { BuyerHistory } from 'recipe/entities/BuyerHistory';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Produk, CartItem])],
+  imports: [TypeOrmModule.forFeature([Produk, CartItem, BuyerHistory])],
   controllers: [ShopController],
-  providers: [CartItemService, ProductService],
+  providers: [CartItemService, ProductService, BuyerHistoryService],
 })
 export class ShopModule {}

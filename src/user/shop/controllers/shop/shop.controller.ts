@@ -5,13 +5,16 @@ import {
   HttpStatus,
   Post,
   SetMetadata,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateCartItemDto, GetDataItemDto } from 'recipe/dto/CartItem.dto';
+import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
 import { CartItemService } from 'src/user/cart-item/service/cart-item/cart-item.service';
-import { EntityManager } from 'typeorm';
 
 @Controller('shop')
 export class ShopController {
@@ -63,9 +66,17 @@ export class ShopController {
   }
 
   @Post('/cart')
-  async orderShopUser(@Body() getDataItemDto: GetDataItemDto) {
+  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  async orderShopUser(
+    @Body() getDataItemDto: GetDataItemDto,
+    @UploadedFile() foto: Express.Multer.File,
+  ) {
     try {
-      return await this.cartService.orderNow(getDataItemDto.user_id);
+      return await this.cartService.orderNow(
+        getDataItemDto.user_id,
+        foto.path,
+        getDataItemDto.purchase,
+      );
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

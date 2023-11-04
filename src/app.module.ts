@@ -16,6 +16,7 @@ import { AuthModule } from './user/auth/auth.module';
 import { SellerModule } from './admin/seller/seller.module';
 import { KontenModule } from './admin/konten/konten.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { TransactionModule } from './transaction/transaction.module';
     SellerModule,
     KontenModule,
     TransactionModule,
+    BuyerHistoryModule,
   ],
 })
 export class AppModule {}
