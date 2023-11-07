@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { BuyerHistory } from './BuyerHistory';
 
 @Entity({ name: 'users' })
 export class User {
@@ -25,4 +26,8 @@ export class User {
 
   @Column()
   level: string;
+
+  @OneToMany(() => BuyerHistory, (buyerHistory) => buyerHistory.user)
+  @JoinColumn({ name: 'id' })
+  buyerHistories: BuyerHistory[];
 }

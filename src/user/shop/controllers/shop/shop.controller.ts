@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateCartItemDto, GetDataItemDto } from 'recipe/dto/CartItem.dto';
+import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
@@ -51,8 +52,8 @@ export class ShopController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['user'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['user'])
+  // @UseGuards(RolesMiddleware)
   @Post('/')
   async addToCart(@Body() createCartItemDto: CreateCartItemDto) {
     try {
@@ -72,10 +73,12 @@ export class ShopController {
     @UploadedFile() foto: Express.Multer.File,
   ) {
     try {
+      const id = RandomStringGenerator();
       return await this.cartService.orderNow(
         getDataItemDto.user_id,
         foto.path,
         getDataItemDto.purchase,
+        id,
       );
     } catch (error) {
       return {

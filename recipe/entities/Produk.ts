@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { CartItem } from './CartItem';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
+import { BuyerHistory } from './BuyerHistory';
+import { OrderProduct } from './OrderProduct';
 
 @Entity({ name: 'produk' })
 export class Produk {
@@ -27,6 +28,9 @@ export class Produk {
   @Column()
   kategori: string;
 
-  @OneToMany(() => CartItem, (item) => item.product_id)
-  public CartItem: CartItem[];
+  @ManyToMany(() => BuyerHistory, (buyerHistory) => buyerHistory.products)
+  buyerHistory: BuyerHistory[];
+
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  public orderProduct: OrderProduct[];
 }

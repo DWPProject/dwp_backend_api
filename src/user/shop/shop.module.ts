@@ -7,10 +7,19 @@ import { Produk } from 'recipe/entities/Produk';
 import { CartItem } from 'recipe/entities/CartItem';
 import { BuyerHistoryService } from '../buyer-history/service/buyer-history/buyer-history.service';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
+import { OrderService } from 'src/admin/order/service/order/order.service';
+import { OrderProduct } from 'recipe/entities/OrderProduct';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Produk, CartItem, BuyerHistory])],
+  imports: [
+    TypeOrmModule.forFeature([Produk, CartItem, BuyerHistory, OrderProduct]),
+  ],
   controllers: [ShopController],
-  providers: [CartItemService, ProductService, BuyerHistoryService],
+  providers: [
+    CartItemService,
+    ProductService,
+    BuyerHistoryService,
+    OrderService,
+  ],
 })
 export class ShopModule {}

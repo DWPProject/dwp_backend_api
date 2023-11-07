@@ -16,7 +16,6 @@ import { KontenService } from '../../service/konten/konten.service';
 import { CreateBeritaDto, UpdateBeritaDto } from 'recipe/dto/Berita.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'recipe/utils/uploadFile';
-import { AuthGuard } from 'src/middleware/auth.middleware';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
 
 @Controller('konten')

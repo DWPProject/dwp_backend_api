@@ -17,6 +17,8 @@ import { SellerModule } from './admin/seller/seller.module';
 import { KontenModule } from './admin/konten/konten.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
+import { OrderModule } from './admin/order/order.module';
+import { OrderProduct } from 'recipe/entities/OrderProduct';
 
 @Module({
   imports: [
@@ -43,6 +45,10 @@ import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
               {
                 path: '/',
                 module: KontenModule,
+              },
+              {
+                path: '/',
+                module: OrderModule,
               },
             ],
           },
@@ -75,7 +81,15 @@ import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [Anggota, Berita, BuyerHistory, CartItem, Produk, User],
+        entities: [
+          Anggota,
+          Berita,
+          BuyerHistory,
+          CartItem,
+          Produk,
+          User,
+          OrderProduct,
+        ],
         synchronize: true,
       }),
     }),
@@ -88,6 +102,7 @@ import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
     KontenModule,
     TransactionModule,
     BuyerHistoryModule,
+    OrderModule,
   ],
 })
 export class AppModule {}
