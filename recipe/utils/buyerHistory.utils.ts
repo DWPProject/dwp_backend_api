@@ -4,4 +4,5 @@ export class CreateBuyerHistoryParams {
   purchase: number;
   payment: string;
   price: string;
+  address: string;
 }

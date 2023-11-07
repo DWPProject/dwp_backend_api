@@ -30,6 +30,9 @@ export class BuyerHistory {
   payment: string;
 
   @Column()
+  address: string;
+
+  @Column()
   payment_status: boolean;
 
   @Column({ default: '0' })

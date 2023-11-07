@@ -16,6 +16,9 @@ export class User {
   username: string;
 
   @Column({ unique: true })
+  nama_toko: string;
+
+  @Column({ unique: true })
   telepon: string;
 
   @Column()

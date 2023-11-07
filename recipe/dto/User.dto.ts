@@ -11,6 +11,7 @@ export class CreateUserSellerDto {
   password: string;
   repassword: string;
   username: string;
+  nama_toko: string;
   telepon: string;
   type_seller: number;
   foto: string;
