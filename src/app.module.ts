@@ -21,6 +21,7 @@ import { OrderModule } from './admin/order/order.module';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
 import { HistoryModule } from './user/history/history.module';
 import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
+import { ReportModule } from './admin/report/report.module';
 import path from 'path';
 
 @Module({
@@ -52,6 +53,10 @@ import path from 'path';
               {
                 path: '/',
                 module: OrderModule,
+              },
+              {
+                path: '/',
+                module: ReportModule,
               },
             ],
           },
@@ -126,6 +131,7 @@ import path from 'path';
     OrderModule,
     HistoryModule,
     OrderSellerModule,
+    ReportModule,
   ],
 })
 export class AppModule {}

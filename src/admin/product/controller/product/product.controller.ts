@@ -110,8 +110,8 @@ export class ProductController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto', multerOptions))
   async createProduct(

@@ -71,6 +71,71 @@ export class BuyerHistoryService {
     };
   }
 
+  async reportOrder(id?: string, start?: Date, end?: Date) {
+    const query = this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select([
+        'buyer_history.id AS id_order',
+        'buyer_history.order_date AS order_date',
+        'produk.nama AS nama',
+        'produk.foto AS foto',
+        'order_product.quantity AS quantity',
+        'produk.harga AS harga',
+        '(produk.harga * order_product.quantity) AS total_harga',
+        '((produk.harga * order_product.quantity) - (produk.harga * order_product.quantity * 5 / 100)) AS seller_cash',
+        '(produk.harga * order_product.quantity * 5 / 100) AS dwp_cash',
+      ])
+      .leftJoin('buyer_history.orderProduct', 'order_product')
+      .leftJoin('order_product.product', 'produk')
+      .leftJoin('buyer_history.user', 'users')
+      .orderBy('buyer_history.order_date', 'DESC')
+      .where('buyer_history.payment_status = :payment_status', {
+        payment_status: true,
+      });
+    if (id) {
+      query.andWhere('produk.id_penjual = :id', { id });
+    }
+    if (start) {
+      query.andWhere('buyer_history.order_date >= :startDate', {
+        startDate: start,
+      });
+    }
+    if (end) {
+      query.andWhere('buyer_history.order_date <= :endDate', { endDate: end });
+    }
+    const result = await query.getRawMany();
+
+    const newData = result.map((item) => ({
+      ...item,
+      order_date: item.order_date.toLocaleString(),
+    }));
+
+    const pendapatan = result.reduce(
+      (acc, item) => acc + parseFloat(item.total_harga),
+      0,
+    );
+    const cash_seller_total = result.reduce(
+      (acc, item) => acc + parseFloat(item.seller_cash),
+      0,
+    );
+    const cash_dwp_total = result.reduce(
+      (acc, item) => acc + parseFloat(item.dwp_cash),
+      0,
+    );
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get Data Order Admin',
+      data: {
+        pendapatan,
+        cash_dwp_total,
+        cash_seller_total,
+        payload: newData,
+      },
+    };
+  }
+
   async changeOrderStatus(id: string, status: string) {
     const result = await this.buyerHistoryRepo.update({ id }, { status });
 

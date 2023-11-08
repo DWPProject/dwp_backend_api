@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { BuyerHistory } from './BuyerHistory';
+import { Produk } from './Produk';
 
 @Entity({ name: 'users' })
 export class User {
@@ -33,4 +34,7 @@ export class User {
   @OneToMany(() => BuyerHistory, (buyerHistory) => buyerHistory.user)
   @JoinColumn({ name: 'id' })
   buyerHistories: BuyerHistory[];
+
+  @OneToMany(() => Produk, (product) => product.id_penjual)
+  produk: Produk[];
 }
