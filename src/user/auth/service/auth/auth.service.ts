@@ -68,6 +68,7 @@ export class AuthService {
       email: createUserSellerParams.email,
       password: hashPass,
       username: createUserSellerParams.username,
+      nama_toko: createUserSellerParams.nama_toko,
       profil: createUserSellerParams.foto,
       telepon: createUserSellerParams.telepon,
       type_seller: createUserSellerParams.type_seller,
