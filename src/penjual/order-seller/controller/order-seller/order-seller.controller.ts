@@ -4,13 +4,13 @@ import { ChangeOrderStatusDto } from 'recipe/utils/orderProduct';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
 @Controller('order')
-export class OrderController {
+export class OrderSellerController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
   @Get('/')
-  async getDataOrderAdmin() {
+  async getDataOrderSeller(@Body() globalDto: GlobalDto) {
     try {
-      return await this.buyerHistoryService.getDataOrderAdmin();
+      return await this.buyerHistoryService.getDataOrderSeller(globalDto.id);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

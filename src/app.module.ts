@@ -19,6 +19,9 @@ import { TransactionModule } from './transaction/transaction.module';
 import { BuyerHistoryModule } from './user/buyer-history/buyer-history.module';
 import { OrderModule } from './admin/order/order.module';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
+import { HistoryModule } from './user/history/history.module';
+import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
+import path from 'path';
 
 @Module({
   imports: [
@@ -67,6 +70,24 @@ import { OrderProduct } from 'recipe/entities/OrderProduct';
                 path: '/',
                 module: AuthModule,
               },
+              {
+                path: '/profile',
+                children: [
+                  {
+                    path: '/',
+                    module: HistoryModule,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            path: 'seller',
+            children: [
+              {
+                path: '/',
+                module: OrderSellerModule,
+              },
             ],
           },
         ],
@@ -103,6 +124,8 @@ import { OrderProduct } from 'recipe/entities/OrderProduct';
     TransactionModule,
     BuyerHistoryModule,
     OrderModule,
+    HistoryModule,
+    OrderSellerModule,
   ],
 })
 export class AppModule {}
