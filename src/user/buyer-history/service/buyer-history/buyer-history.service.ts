@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
+import { User } from 'recipe/entities/Users';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
 import { EntityManager, Repository } from 'typeorm';
-
 @Injectable()
 export class BuyerHistoryService {
   constructor(
@@ -82,9 +82,16 @@ export class BuyerHistoryService {
         'order_product.quantity AS quantity',
         'produk.harga AS harga',
         '(produk.harga * order_product.quantity) AS total_harga',
-        '((produk.harga * order_product.quantity) - (produk.harga * order_product.quantity * 5 / 100)) AS seller_cash',
-        '(produk.harga * order_product.quantity * 5 / 100) AS dwp_cash',
+        '(produk.harga * order_product.quantity) * (1 - CASE WHEN (SELECT type_seller FROM users WHERE id = produk.id_penjual) = 0 THEN 0.05 ELSE 0.10 END) AS seller_cash',
+        '(produk.harga * order_product.quantity) * (CASE WHEN (SELECT type_seller FROM users WHERE id = produk.id_penjual) = 0 THEN 0.05 ELSE 0.10 END) AS dwp_cash',
       ])
+      .addSelect((subQuery) => {
+        subQuery
+          .select('users.type_seller', 'type_seller')
+          .from('users', 'users')
+          .where('users.id = produk.id_penjual');
+        return subQuery;
+      }, 'type_seller')
       .leftJoin('buyer_history.orderProduct', 'order_product')
       .leftJoin('order_product.product', 'produk')
       .leftJoin('buyer_history.user', 'users')
