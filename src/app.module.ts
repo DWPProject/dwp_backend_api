@@ -22,7 +22,7 @@ import { OrderProduct } from 'recipe/entities/OrderProduct';
 import { HistoryModule } from './user/history/history.module';
 import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
 import { ReportModule } from './admin/report/report.module';
-import path from 'path';
+import { ReportSellerModule } from './penjual/report-seller/report-seller.module';
 
 @Module({
   imports: [
@@ -93,6 +93,10 @@ import path from 'path';
                 path: '/',
                 module: OrderSellerModule,
               },
+              {
+                path: '/',
+                module: ReportSellerModule,
+              },
             ],
           },
         ],
@@ -132,6 +136,7 @@ import path from 'path';
     HistoryModule,
     OrderSellerModule,
     ReportModule,
+    ReportSellerModule,
   ],
 })
 export class AppModule {}

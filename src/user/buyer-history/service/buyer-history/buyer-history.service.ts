@@ -202,6 +202,7 @@ export class BuyerHistoryService {
       message: 'Success Finish Order',
     };
   }
+
   async declineOrder(id: string) {
     const result = await this.buyerHistoryRepo.update(
       { id },
