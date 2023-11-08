@@ -29,7 +29,7 @@ export class BuyerHistory {
   @Column()
   payment: string;
 
-  @Column()
+  @Column({ default: '' })
   address: string;
 
   @Column()

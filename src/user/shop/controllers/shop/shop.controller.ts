@@ -79,6 +79,7 @@ export class ShopController {
         foto.path,
         getDataItemDto.purchase,
         id,
+        getDataItemDto.address,
       );
     } catch (error) {
       return {

@@ -14,4 +14,5 @@ export class UpdateCartItemDto {
 export class GetDataItemDto {
   user_id: string;
   purchase: number;
+  address: string;
 }

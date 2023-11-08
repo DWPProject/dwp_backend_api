@@ -39,6 +39,7 @@ export class AuthService {
       username: createUserParams.username,
       profil: createUserParams.foto,
       telepon: createUserParams.telepon,
+      nama_toko: null,
       type_seller: null,
       level: 'user',
     });
@@ -131,15 +132,15 @@ export class AuthService {
     };
   }
 
-  async forgotPassword(forgotPasswordParams: forgotPasswordParams){
+  async forgotPassword(forgotPasswordParams: forgotPasswordParams) {
     const data = await this.userRepository.findOne({
       where: {
-        email: forgotPasswordParams.email
-      }
-    })
-    console.log(data)
+        email: forgotPasswordParams.email,
+      },
+    });
+    console.log(data);
 
-    if(!data){
+    if (!data) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         status: 'Failed',
@@ -147,32 +148,35 @@ export class AuthService {
       };
     }
 
-    if(forgotPasswordParams.newPassword !== forgotPasswordParams.reNewPassword){
+    if (
+      forgotPasswordParams.newPassword !== forgotPasswordParams.reNewPassword
+    ) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         status: 'failed',
-        message: 'Password and Repassword do not match'
-      }
+        message: 'Password and Repassword do not match',
+      };
     }
 
     const hashPass = await HashPassword(forgotPasswordParams.newPassword);
 
     const result = await this.userRepository.update(
-      {email : data.email}, {password: hashPass}
-    )
+      { email: data.email },
+      { password: hashPass },
+    );
 
-    if (result.affected === 0 ) {
+    if (result.affected === 0) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         status: 'failed',
-        message: 'Email not Registered'
-      }
+        message: 'Email not Registered',
+      };
     }
 
     return {
       statusCode: HttpStatus.ACCEPTED,
       status: 'successs',
-      message: 'Success CHange Password'
-    }
+      message: 'Success CHange Password',
+    };
   }
 }

@@ -94,7 +94,13 @@ export class CartItemService {
     };
   }
 
-  async orderNow(userId: string, foto: string, purchase: number, id: string) {
+  async orderNow(
+    userId: string,
+    foto: string,
+    purchase: number,
+    id: string,
+    address: string,
+  ) {
     return this.entityManager.transaction(async (transactionEntityManager) => {
       const listItem = await this.getDataCartItemService(userId);
 
@@ -105,6 +111,7 @@ export class CartItemService {
       data.purchase = purchase;
       data.payment = foto;
       data.price = listItem.price;
+      data.address = address;
 
       await this.buyerHistoryService.createHistoryUser(
         data,
