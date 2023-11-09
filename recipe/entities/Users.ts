@@ -35,6 +35,7 @@ export class User {
   @JoinColumn({ name: 'id' })
   buyerHistories: BuyerHistory[];
 
-  @OneToMany(() => Produk, (product) => product.id_penjual)
+  @OneToMany(() => Produk, (product) => product.user)
+  @JoinColumn({ name: 'id' })
   produk: Produk[];
 }

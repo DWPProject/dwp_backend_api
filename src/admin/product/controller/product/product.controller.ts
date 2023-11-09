@@ -22,9 +22,9 @@ import { RolesMiddleware } from 'src/middleware/roles.middleware';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // // @UseGuards(AuthGuard)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Get('bankProduct')
   async getProductBankProduct() {
     try {

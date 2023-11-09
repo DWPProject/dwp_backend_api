@@ -6,7 +6,7 @@ import {
   UpdateProductParams,
 } from 'recipe/utils/Product.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository, getManager } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -69,11 +69,22 @@ export class ProductService {
   }
 
   async getDataSellProduct() {
-    const data = await this.produkRepository.find({
-      where: {
-        jual: true,
-      },
-    });
+    const data = await this.produkRepository
+      .createQueryBuilder('produk')
+      .select([
+        'user.id AS id_penjual',
+        'user.nama_toko',
+        'user.profile AS profile_penjual',
+        'user.username',
+        'produk.id AS id_produk',
+        'produk.nama',
+        'produk.foto AS gambar_produk',
+        'produk.stok',
+        'produk.kategori',
+      ])
+      .leftJoin('produk.user', 'user')
+      .where('produk.jual = :jual', { jual: true })
+      .getRawMany();
 
     return {
       statusCode: HttpStatus.OK,
@@ -83,11 +94,22 @@ export class ProductService {
     };
   }
   async getDataBankProduct() {
-    const data = await this.produkRepository.find({
-      where: {
-        jual: false,
-      },
-    });
+    const data = await this.produkRepository
+      .createQueryBuilder('produk')
+      .select([
+        'user.id AS id_penjual',
+        'user.nama_toko',
+        'user.profile AS profile_penjual',
+        'user.username',
+        'produk.id AS id_produk',
+        'produk.nama',
+        'produk.foto AS gambar_produk',
+        'produk.stok',
+        'produk.kategori',
+      ])
+      .leftJoin('produk.user', 'user')
+      .where('produk.jual = :jual', { jual: false })
+      .getRawMany();
 
     return {
       statusCode: HttpStatus.OK,
