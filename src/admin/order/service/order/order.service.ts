@@ -24,4 +24,29 @@ export class OrderService {
       return await transactionManager.save(OrderProduct, data);
     });
   }
+
+  async getPopulerProduk(id?: string) {
+    const data = this.orderProductRepo
+      .createQueryBuilder('order_product')
+      .select([
+        'product.id',
+        'product.nama',
+        'product.harga',
+        'product.id_penjual',
+        'product.foto',
+        'product.stok',
+        'product.jual',
+        'SUM(order_product.quantity) AS terjual',
+        'SUM(order_Product.quantity) * product.harga AS total',
+      ])
+      .innerJoin('order_product.product', 'product')
+      .groupBy(
+        'product.id, product.nama, product.harga, product.id_penjual, product.foto, product.stok, product.jual, product.kategori',
+      )
+      .orderBy('terjual', 'DESC')
+      // .where('product.id_penjual = :id_penjual', { id_penjual: id })
+      .getRawMany();
+
+    return data;
+  }
 }

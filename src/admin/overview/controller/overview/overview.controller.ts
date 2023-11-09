@@ -1,13 +1,17 @@
 import { Body, Controller, Get, HttpStatus } from '@nestjs/common';
-import ReportDto from 'recipe/dto/Report.dto';
+import { OverviewDto, ReportDto } from 'recipe/dto/Report.dto';
+import { OrderService } from 'src/admin/order/service/order/order.service';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
 @Controller('overview')
 export class OverviewController {
-  constructor(private buyerHistoryService: BuyerHistoryService) {}
+  constructor(
+    private buyerHistoryService: BuyerHistoryService,
+    private orderService: OrderService,
+  ) {}
 
   @Get('/')
-  async overviewAdmin(@Body() reportDto: ReportDto) {
+  async overviewAdmin(@Body() reportDto: OverviewDto) {
     try {
       const tahun = new Date().getFullYear();
       const januari = new ReportDto();
@@ -120,6 +124,18 @@ export class OverviewController {
         november: nov,
         desember: des,
       };
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @Get('/populer')
+  async populerOrder(@Body() overviewDto: OverviewDto) {
+    try {
+      return await this.orderService.getPopulerProduk(overviewDto.id);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
