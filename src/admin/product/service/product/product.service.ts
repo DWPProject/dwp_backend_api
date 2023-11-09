@@ -72,19 +72,20 @@ export class ProductService {
     const data = await this.produkRepository
       .createQueryBuilder('produk')
       .select([
-        'user.id AS id_penjual',
-        'user.nama_toko',
-        'user.profile AS profile_penjual',
-        'user.username',
+        'users.id AS id_penjual',
+        'users.nama_toko',
+        'users.profil AS profile_penjual',
+        'users.username',
         'produk.id AS id_produk',
         'produk.nama',
         'produk.foto AS gambar_produk',
         'produk.stok',
+        'produk.id_penjual',
         'produk.kategori',
       ])
-      .leftJoin('produk.user', 'user')
+      .leftJoin('produk.user', 'users')
       .where('produk.jual = :jual', { jual: true })
-      .getRawMany();
+      .getMany();
 
     return {
       statusCode: HttpStatus.OK,
@@ -97,19 +98,20 @@ export class ProductService {
     const data = await this.produkRepository
       .createQueryBuilder('produk')
       .select([
-        'user.id AS id_penjual',
-        'user.nama_toko',
-        'user.profile AS profile_penjual',
-        'user.username',
+        'users.id AS id_penjual',
+        'users.nama_toko',
+        'users.profil AS profile_penjual',
+        'users.username',
         'produk.id AS id_produk',
         'produk.nama',
         'produk.foto AS gambar_produk',
         'produk.stok',
+        'produk.id_penjual',
         'produk.kategori',
       ])
-      .leftJoin('produk.user', 'user')
+      .leftJoin('produk.user', 'users')
       .where('produk.jual = :jual', { jual: false })
-      .getRawMany();
+      .getMany();
 
     return {
       statusCode: HttpStatus.OK,
