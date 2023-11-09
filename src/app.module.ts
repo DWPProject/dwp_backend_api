@@ -24,6 +24,7 @@ import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
 import { ReportModule } from './admin/report/report.module';
 import { ReportSellerModule } from './penjual/report-seller/report-seller.module';
 import { OverviewModule } from './admin/overview/overview.module';
+import path from 'path';
 
 @Module({
   imports: [
@@ -58,6 +59,10 @@ import { OverviewModule } from './admin/overview/overview.module';
               {
                 path: '/',
                 module: ReportModule,
+              },
+              {
+                path: '/',
+                module: OverviewModule,
               },
             ],
           },
