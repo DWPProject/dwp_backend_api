@@ -23,6 +23,7 @@ import { HistoryModule } from './user/history/history.module';
 import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
 import { ReportModule } from './admin/report/report.module';
 import { ReportSellerModule } from './penjual/report-seller/report-seller.module';
+import { OverviewModule } from './admin/overview/overview.module';
 
 @Module({
   imports: [
@@ -137,6 +138,7 @@ import { ReportSellerModule } from './penjual/report-seller/report-seller.module
     OrderSellerModule,
     ReportModule,
     ReportSellerModule,
+    OverviewModule,
   ],
 })
 export class AppModule {}

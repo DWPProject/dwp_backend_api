@@ -1,7 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
-import { User } from 'recipe/entities/Users';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
 import { EntityManager, Repository } from 'typeorm';
 @Injectable()
@@ -71,7 +70,7 @@ export class BuyerHistoryService {
     };
   }
 
-  async reportOrder(id?: string, start?: Date, end?: Date) {
+  async reportOrder(id?: string, start?: string, end?: string) {
     const query = this.buyerHistoryRepo
       .createQueryBuilder('buyer_history')
       .select([
