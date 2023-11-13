@@ -34,3 +34,11 @@ export class forgotPasswordParams {
   newPassword: string;
   reNewPassword: string;
 }
+
+export class DeleteSellerParams {
+  id: string;
+}
+
+export class LogoutUserParams {
+  id: string;
+}

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Post,
@@ -10,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateUserSellerDto } from 'recipe/dto/User.dto';
+import { CreateUserSellerDto, DeleteAccSeller } from 'recipe/dto/User.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AuthGuard } from 'src/middleware/auth.middleware';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
@@ -31,10 +32,7 @@ export class SellerController {
   ) {
     try {
       if (!foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
+        createUserSellerDto.foto = 'Default';
       }
       createUserSellerDto.foto = foto.path;
       return await this.userService.createUserPenjual(createUserSellerDto);
@@ -53,6 +51,18 @@ export class SellerController {
   async getDataUserSeller() {
     try {
       return await this.userService.getDataSeller();
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @Delete('/')
+  async deleteAccSeller(@Body() deleteAccSeller: DeleteAccSeller) {
+    try {
+      return await this.userService.DeleteAccSeller(deleteAccSeller);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

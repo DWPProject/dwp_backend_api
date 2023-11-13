@@ -5,10 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'recipe/entities/Users';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './service/jwtConstant';
+import { ProductService } from 'src/admin/product/service/product/product.service';
+import { Produk } from 'recipe/entities/Produk';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Produk]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -16,7 +18,7 @@ import { jwtConstants } from './service/jwtConstant';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, ProductService],
   exports: [AuthService],
 })
 export class AuthModule {}

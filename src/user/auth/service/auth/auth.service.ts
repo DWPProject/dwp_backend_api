@@ -5,11 +5,14 @@ import { User } from 'recipe/entities/Users';
 import {
   CreateUserParams,
   CreateUserSellerParams,
+  DeleteSellerParams,
   LoginUserParams,
+  LogoutUserParams,
   forgotPasswordParams,
 } from 'recipe/utils/User.utils';
 import { ComparePassword, HashPassword } from 'recipe/utils/hashPassword';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
+import { ProductService } from 'src/admin/product/service/product/product.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,6 +20,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private productSvc: ProductService,
     private jwtService: JwtService,
   ) {}
 
@@ -179,4 +183,31 @@ export class AuthService {
       message: 'Success CHange Password',
     };
   }
+  async DeleteAccSeller(deleteSellerParams: DeleteSellerParams) {
+    const result = await this.productSvc.findProductById(deleteSellerParams);
+    if (result) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'failed',
+        message: 'This User Have Product in Bank Product',
+      };
+    }
+    const data = await this.userRepository.delete(deleteSellerParams.id);
+
+    if (data.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'failed',
+        message: 'Failed Delete Seller',
+      };
+    }
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      status: 'successs',
+      message: 'Success Delete Account Seller',
+    };
+  }
+
+  async LogoutUser(logoutUserParams: LogoutUserParams) {}
 }

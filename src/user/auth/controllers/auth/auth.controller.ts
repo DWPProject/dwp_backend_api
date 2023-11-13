@@ -9,7 +9,11 @@ import {
 import { AuthService } from '../../service/auth/auth.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'recipe/utils/uploadFile';
-import { CreateUserDto, LoginUserDto, forgotPasswordDto } from 'recipe/dto/User.dto';
+import {
+  CreateUserDto,
+  LoginUserDto,
+  forgotPasswordDto,
+} from 'recipe/dto/User.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,12 +27,10 @@ export class AuthController {
   ) {
     try {
       if (!foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
+        createUserDto.foto = 'Default';
+      } else {
+        createUserDto.foto = foto.path;
       }
-      createUserDto.foto = foto.path;
       return await this.authService.createUser(createUserDto);
     } catch (error) {
       return {
@@ -53,12 +55,12 @@ export class AuthController {
   @Post('/forgotPassword')
   async forgotPassword(@Body() forgotPasswordDto: forgotPasswordDto) {
     try {
-      return await this.authService.forgotPassword(forgotPasswordDto)
-    } catch(error) {
+      return await this.authService.forgotPassword(forgotPasswordDto);
+    } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         error: `${error}`,
-      }
+      };
     }
   }
 }

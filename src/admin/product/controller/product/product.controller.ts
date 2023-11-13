@@ -93,7 +93,7 @@ export class ProductController {
     @Body() updateProductDto: UpdateProductDto,
   ) {
     try {
-      if (!foto) {
+      if (foto) {
         return {
           status: HttpStatus.BAD_REQUEST,
           message: 'File Not Null',

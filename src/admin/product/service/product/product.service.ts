@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteAccSeller } from 'recipe/dto/User.dto';
 import { Produk } from 'recipe/entities/Produk';
 import {
   CreateProductParams,
@@ -13,6 +14,16 @@ export class ProductService {
   constructor(
     @InjectRepository(Produk) private produkRepository: Repository<Produk>,
   ) {}
+
+  async findProductById(deleteAccSeller: DeleteAccSeller) {
+    const data = await this.produkRepository.find({
+      where: {
+        id_penjual: deleteAccSeller.id,
+      },
+    });
+
+    return data;
+  }
 
   async createProduct(createProductParams: CreateProductParams) {
     const idProduct = RandomStringGenerator();

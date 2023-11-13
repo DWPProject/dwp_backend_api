@@ -22,9 +22,15 @@ export class LoginUserDto {
   password: string;
 }
 
-
 export class forgotPasswordDto {
   email: string;
   newPassword: string;
   reNewPassword: string;
+}
+
+export class DeleteAccSeller {
+  id: string;
+}
+export class LogoutUserDto {
+  id: string;
 }
