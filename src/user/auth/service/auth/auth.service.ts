@@ -18,6 +18,7 @@ import { ProductService } from 'src/admin/product/service/product/product.servic
 import { UploadService } from 'src/cloudinary/service/service.service';
 import { Repository } from 'typeorm';
 import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
@@ -83,6 +84,19 @@ export class AuthService {
     foto: Express.Multer.File,
     createUserSellerParams: CreateUserSellerParams,
   ) {
+    const userParams = plainToClass(
+      CreateUserSellerParams,
+      createUserSellerParams,
+    );
+    const errors = await validate(userParams);
+    if (errors.length > 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Validation failed',
+        errors: errors.map((error) => Object.values(error.constraints)).flat(),
+      };
+    }
     if (!foto) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,

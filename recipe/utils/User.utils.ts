@@ -22,12 +22,30 @@ export class CreateUserParams {
 }
 
 export class CreateUserSellerParams {
+  @IsEmail()
   email: string;
+
+  @IsString()
+  @MinLength(6)
   password: string;
+
+  @IsString()
+  @MinLength(6)
   repassword: string;
+
+  @IsString()
+  @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsNotEmpty()
   nama_toko: string;
+
+  @IsString()
+  @IsNotEmpty()
   telepon: string;
+
+  @IsNotEmpty()
   type_seller: number;
 }
 export class UpdateUserSellerParams {
