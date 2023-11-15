@@ -1,12 +1,13 @@
+import { ConfigService } from '@nestjs/config';
 import { ConfigOptions, v2 } from 'cloudinary';
 
 export const CloudinaryProvider = {
   provide: 'Cloudinary',
   useFactory: (): ConfigOptions => {
     return v2.config({
-      cloud_name: 'dic2dqube',
-      api_key: '345825913927338',
-      api_secret: 'Y73U42IY_biSJIZjFj--cZNq5T0',
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.API_KEY_PROVIDER,
+      api_secret: process.env.API_SECRET_PROVIDER,
     });
   },
 };
