@@ -83,24 +83,21 @@ export class ProductController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Put(':id')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async updateProduct(
     @UploadedFile() foto: Express.Multer.File,
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
     try {
-      if (foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      updateProductDto.foto = foto.path;
-      return await this.productService.updateProduct(updateProductDto, id);
+      return await this.productService.updateProduct(
+        updateProductDto,
+        id,
+        foto,
+      );
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -113,20 +110,13 @@ export class ProductController {
   // @SetMetadata('roles', ['admin'])
   // @UseGuards(RolesMiddleware)
   @Post('/')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async createProduct(
     @UploadedFile() foto: Express.Multer.File,
     @Body() createProductDto: CreateProductDto,
   ) {
     try {
-      if (!foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      createProductDto.foto = foto.path;
-      return await this.productService.createProduct(createProductDto);
+      return await this.productService.createProduct(createProductDto, foto);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

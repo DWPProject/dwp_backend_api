@@ -9,6 +9,7 @@ import { BuyerHistoryService } from '../buyer-history/service/buyer-history/buye
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
 import { OrderService } from 'src/admin/order/service/order/order.service';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
+import { UploadService } from 'src/cloudinary/service/service.service';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { OrderProduct } from 'recipe/entities/OrderProduct';
     BuyerHistoryService,
     OrderService,
     OrderService,
+    UploadService,
   ],
 })
 export class CartItemModule {}

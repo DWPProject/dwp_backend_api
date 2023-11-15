@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteAccSeller } from 'recipe/dto/User.dto';
 import { Produk } from 'recipe/entities/Produk';
@@ -7,12 +7,15 @@ import {
   UpdateProductParams,
 } from 'recipe/utils/Product.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
-import { EntityManager, Repository, getManager } from 'typeorm';
+import { UploadService } from 'src/cloudinary/service/service.service';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(Produk) private produkRepository: Repository<Produk>,
+    @InjectRepository(Produk)
+    private produkRepository: Repository<Produk>,
+    private uploadCloudinary: UploadService,
   ) {}
 
   async findProductById(deleteAccSeller: DeleteAccSeller) {
@@ -25,11 +28,25 @@ export class ProductService {
     return data;
   }
 
-  async createProduct(createProductParams: CreateProductParams) {
+  async createProduct(
+    createProductParams: CreateProductParams,
+    foto: Express.Multer.File,
+  ) {
+    if (!foto) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Please Upload Foto',
+      };
+    }
+    const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
     const idProduct = RandomStringGenerator();
     const newProduct = this.produkRepository.create({
       id: idProduct,
       jual: false,
+      foto: res.url,
       ...createProductParams,
     });
 
@@ -42,24 +59,51 @@ export class ProductService {
     };
   }
 
-  async updateProduct(updateProductParams: UpdateProductParams, id: string) {
-    const result = await this.produkRepository.update(
-      { id },
-      { ...updateProductParams },
-    );
-    if (result.affected === 0) {
+  async updateProduct(
+    updateProductParams: UpdateProductParams,
+    id: string,
+    foto: Express.Multer.File,
+  ) {
+    if (!foto) {
+      const result = await this.produkRepository.update(
+        { id },
+        { ...updateProductParams },
+      );
+      if (result.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Data Not Found',
+        };
+      }
+
       return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        status: 'Failed',
-        message: 'Data Not Found',
+        statusCode: HttpStatus.OK,
+        status: 'Success',
+        message: 'Success Update Data',
+      };
+    } else {
+      const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      const result = await this.produkRepository.update(
+        { id },
+        { ...updateProductParams, foto: res.url },
+      );
+      if (result.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Data Not Found',
+        };
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        status: 'Success',
+        message: 'Success Update Data',
       };
     }
-
-    return {
-      statusCode: HttpStatus.OK,
-      status: 'Success',
-      message: 'Success Update Data',
-    };
   }
 
   async sellProduct(id: string) {

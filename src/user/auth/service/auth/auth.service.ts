@@ -65,6 +65,13 @@ export class AuthService {
     foto: Express.Multer.File,
     createUserSellerParams: CreateUserSellerParams,
   ) {
+    if (!foto) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Please Upload Foto',
+      };
+    }
     if (createUserSellerParams.password != createUserSellerParams.repassword) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
