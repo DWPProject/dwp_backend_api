@@ -23,6 +23,7 @@ export class AuthController {
   @Post('/register')
   async register(@Body() createUserDto: CreateUserDto) {
     try {
+      console.log(createUserDto);
       return await this.authService.createUser(createUserDto);
     } catch (error) {
       return {

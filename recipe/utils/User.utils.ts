@@ -1,8 +1,23 @@
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
 export class CreateUserParams {
+  @IsEmail()
   email: string;
+
+  @IsString()
+  @MinLength(6)
   password: string;
+
+  @IsString()
+  @MinLength(6)
   repassword: string;
+
+  @IsString()
+  @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsNotEmpty()
   telepon: string;
 }
 

@@ -17,6 +17,7 @@ import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils'
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { UploadService } from 'src/cloudinary/service/service.service';
 import { Repository } from 'typeorm';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -29,6 +30,23 @@ export class AuthService {
   ) {}
 
   async createUser(createUserParams: CreateUserParams) {
+    const user = new CreateUserParams();
+    user.email = createUserParams.email;
+    user.password = createUserParams.password;
+    user.repassword = createUserParams.repassword;
+    user.username = createUserParams.username;
+    user.telepon = createUserParams.telepon;
+
+    // Validate user input
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Validation failed',
+        errors: errors.map((error) => Object.values(error.constraints)).flat(),
+      };
+    }
     if (createUserParams.password != createUserParams.repassword) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
