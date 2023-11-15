@@ -14,23 +14,15 @@ import {
   LoginUserDto,
   forgotPasswordDto,
 } from 'recipe/dto/User.dto';
+import { UpdateUserParams } from 'recipe/utils/User.utils';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/register')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
-  async register(
-    @UploadedFile() foto: Express.Multer.File,
-    @Body() createUserDto: CreateUserDto,
-  ) {
+  async register(@Body() createUserDto: CreateUserDto) {
     try {
-      if (!foto) {
-        createUserDto.foto = 'Default';
-      } else {
-        createUserDto.foto = foto.path;
-      }
       return await this.authService.createUser(createUserDto);
     } catch (error) {
       return {
@@ -38,6 +30,15 @@ export class AuthController {
         error: `${error}`,
       };
     }
+  }
+
+  @Post('/update')
+  @UseInterceptors(FileInterceptor('foto'))
+  async updateUser(
+    @UploadedFile() foto: Express.Multer.File,
+    @Body() updateUserDto: UpdateUserParams,
+  ) {
+    return await this.authService.updateUser(foto, updateUserDto);
   }
 
   @Post('/login')

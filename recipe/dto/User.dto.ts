@@ -4,7 +4,6 @@ export class CreateUserDto {
   repassword: string;
   username: string;
   telepon: string;
-  foto: string;
 }
 export class CreateUserSellerDto {
   email: string;
@@ -14,7 +13,14 @@ export class CreateUserSellerDto {
   nama_toko: string;
   telepon: string;
   type_seller: number;
-  foto: string;
+}
+
+export class UpdateUserSellerDto {
+  email: string;
+  username: string;
+  nama_toko: string;
+  telepon: string;
+  type_seller: number;
 }
 
 export class LoginUserDto {

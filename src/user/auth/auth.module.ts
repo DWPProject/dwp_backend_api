@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './service/jwtConstant';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { Produk } from 'recipe/entities/Produk';
+import { UploadService } from 'src/cloudinary/service/service.service';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { Produk } from 'recipe/entities/Produk';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, ProductService],
+  providers: [AuthService, ProductService, UploadService],
   exports: [AuthService],
 })
 export class AuthModule {}

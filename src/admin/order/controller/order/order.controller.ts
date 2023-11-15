@@ -2,10 +2,14 @@ import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { GlobalDto } from 'recipe/dto/Globa.dto';
 import { ChangeOrderStatusDto } from 'recipe/utils/orderProduct';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
+import { WhatsAppService } from 'src/whatsapp/services/services.service';
 
 @Controller('order')
 export class OrderController {
-  constructor(private buyerHistoryService: BuyerHistoryService) {}
+  constructor(
+    private buyerHistoryService: BuyerHistoryService,
+    private whatappService: WhatsAppService,
+  ) {}
 
   @Get('/')
   async getDataOrderAdmin() {
@@ -68,5 +72,15 @@ export class OrderController {
         error: `${error}`,
       };
     }
+  }
+
+  @Get('/sendMessage')
+  async messageWa() {
+    const to = '+6287775440461'; // Ganti dengan nomor tujuan Anda
+    const message = 'Halo dari Nest.js!'; // Ganti dengan pesan Anda
+
+    const result = await this.whatappService.sendInitialMessage(to, message);
+
+    return { success: result };
   }
 }

@@ -11,7 +11,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateUserSellerDto, DeleteAccSeller } from 'recipe/dto/User.dto';
+import {
+  CreateUserSellerDto,
+  DeleteAccSeller,
+  UpdateUserSellerDto,
+} from 'recipe/dto/User.dto';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { AuthGuard } from 'src/middleware/auth.middleware';
 import { RolesMiddleware } from 'src/middleware/roles.middleware';
@@ -22,20 +26,38 @@ export class SellerController {
   constructor(private userService: AuthService) {}
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Post('/')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async createAccSeller(
     @UploadedFile() foto: Express.Multer.File,
     @Body() createUserSellerDto: CreateUserSellerDto,
   ) {
     try {
-      if (!foto) {
-        createUserSellerDto.foto = 'Default';
-      }
-      createUserSellerDto.foto = foto.path;
-      return await this.userService.createUserPenjual(createUserSellerDto);
+      return await this.userService.createUserPenjual(
+        foto,
+        createUserSellerDto,
+      );
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @Post('/update')
+  @UseInterceptors(FileInterceptor('foto'))
+  async updateSellerAcc(
+    @UploadedFile() foto: Express.Multer.File,
+    @Body() updateUserSellerDto: UpdateUserSellerDto,
+  ) {
+    try {
+      return await this.userService.updateUserPenjual(
+        foto,
+        updateUserSellerDto,
+      );
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

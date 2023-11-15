@@ -4,7 +4,6 @@ export class CreateUserParams {
   repassword: string;
   username: string;
   telepon: string;
-  foto: string;
 }
 
 export class CreateUserSellerParams {
@@ -15,7 +14,13 @@ export class CreateUserSellerParams {
   nama_toko: string;
   telepon: string;
   type_seller: number;
-  foto: string;
+}
+export class UpdateUserSellerParams {
+  email: string;
+  username: string;
+  nama_toko: string;
+  telepon: string;
+  type_seller: number;
 }
 
 export class LoginUserParams {
@@ -24,9 +29,9 @@ export class LoginUserParams {
 }
 
 export class UpdateUserParams {
+  email: string;
   username: string;
   telepon: string;
-  profil: string;
 }
 
 export class forgotPasswordParams {

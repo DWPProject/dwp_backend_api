@@ -24,6 +24,8 @@ import { OrderSellerModule } from './penjual/order-seller/order-seller.module';
 import { ReportModule } from './admin/report/report.module';
 import { ReportSellerModule } from './penjual/report-seller/report-seller.module';
 import { OverviewModule } from './admin/overview/overview.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import path from 'path';
 
 @Module({
@@ -144,6 +146,8 @@ import path from 'path';
     ReportModule,
     ReportSellerModule,
     OverviewModule,
+    WhatsappModule,
+    CloudinaryModule,
   ],
 })
 export class AppModule {}

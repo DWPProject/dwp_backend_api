@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'recipe/entities/Users';
@@ -8,11 +8,14 @@ import {
   DeleteSellerParams,
   LoginUserParams,
   LogoutUserParams,
+  UpdateUserParams,
+  UpdateUserSellerParams,
   forgotPasswordParams,
 } from 'recipe/utils/User.utils';
 import { ComparePassword, HashPassword } from 'recipe/utils/hashPassword';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { ProductService } from 'src/admin/product/service/product/product.service';
+import { UploadService } from 'src/cloudinary/service/service.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -22,6 +25,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     private productSvc: ProductService,
     private jwtService: JwtService,
+    private uploadCloudinary: UploadService,
   ) {}
 
   async createUser(createUserParams: CreateUserParams) {
@@ -41,8 +45,9 @@ export class AuthService {
       email: createUserParams.email,
       password: hashPass,
       username: createUserParams.username,
-      profil: createUserParams.foto,
       telepon: createUserParams.telepon,
+      profil:
+        'https://res.cloudinary.com/dic2dqube/image/upload/v1700027020/images/hzyztbdujr0cr7rivvzl.png',
       nama_toko: null,
       type_seller: null,
       level: 'user',
@@ -56,7 +61,10 @@ export class AuthService {
       message: 'Success Register',
     };
   }
-  async createUserPenjual(createUserSellerParams: CreateUserSellerParams) {
+  async createUserPenjual(
+    foto: Express.Multer.File,
+    createUserSellerParams: CreateUserSellerParams,
+  ) {
     if (createUserSellerParams.password != createUserSellerParams.repassword) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
@@ -67,6 +75,9 @@ export class AuthService {
 
     const idUser = RandomStringGenerator();
     const hashPass = await HashPassword(createUserSellerParams.password);
+    const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
 
     const newUser = this.userRepository.create({
       id: idUser,
@@ -74,7 +85,7 @@ export class AuthService {
       password: hashPass,
       username: createUserSellerParams.username,
       nama_toko: createUserSellerParams.nama_toko,
-      profil: createUserSellerParams.foto,
+      profil: res.url,
       telepon: createUserSellerParams.telepon,
       type_seller: createUserSellerParams.type_seller,
       level: 'penjual',
@@ -87,6 +98,66 @@ export class AuthService {
       status: 'Success',
       message: 'Success Register',
     };
+  }
+
+  async updateUserPenjual(
+    foto: Express.Multer.File,
+    updateSellerParams: UpdateUserSellerParams,
+  ) {
+    if (!foto) {
+      const success = await this.userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          username: updateSellerParams.username,
+          nama_toko: updateSellerParams.nama_toko,
+          type_seller: updateSellerParams.type_seller,
+          telepon: updateSellerParams.telepon,
+        })
+        .where('email = :email', { email: updateSellerParams.email })
+        .execute();
+      if (success.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'failed',
+          message: 'Failed Update User',
+        };
+      }
+      return {
+        statusCode: HttpStatus.ACCEPTED,
+        status: 'successs',
+        message: 'Success update Data User',
+      };
+    } else {
+      const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      const success = await this.userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          username: updateSellerParams.username,
+          nama_toko: updateSellerParams.nama_toko,
+          type_seller: updateSellerParams.type_seller,
+          telepon: updateSellerParams.telepon,
+          profil: res.url,
+        })
+        .where('email = :email', { email: updateSellerParams.email })
+        .execute();
+
+      if (success.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'failed',
+          message: 'Failed Update User',
+        };
+      }
+      return {
+        statusCode: HttpStatus.ACCEPTED,
+        status: 'successs',
+        message: 'Success update Data User',
+      };
+    }
   }
 
   async getDataSeller() {
@@ -207,6 +278,64 @@ export class AuthService {
       status: 'successs',
       message: 'Success Delete Account Seller',
     };
+  }
+
+  async updateUser(
+    foto: Express.Multer.File,
+    updateUserParams: UpdateUserParams,
+  ) {
+    if (!foto) {
+      const success = await this.userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          username: updateUserParams.username,
+          telepon: updateUserParams.telepon,
+        })
+        .where('email = :email', { email: updateUserParams.email })
+        .execute();
+      if (success.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'failed',
+          message: 'Failed Update User',
+        };
+      }
+
+      return {
+        statusCode: HttpStatus.ACCEPTED,
+        status: 'successs',
+        message: 'Success update Data User',
+      };
+    } else {
+      const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      const success = await this.userRepository
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          username: updateUserParams.username,
+          telepon: updateUserParams.telepon,
+          profil: res.url,
+        })
+        .where('email = :email', { email: updateUserParams.email })
+        .execute();
+
+      if (success.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'failed',
+          message: 'Failed Update User',
+        };
+      }
+
+      return {
+        statusCode: HttpStatus.ACCEPTED,
+        status: 'successs',
+        message: 'Success update Data User',
+      };
+    }
   }
 
   async LogoutUser(logoutUserParams: LogoutUserParams) {}
