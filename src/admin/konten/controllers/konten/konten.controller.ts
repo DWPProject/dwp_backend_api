@@ -35,23 +35,16 @@ export class KontenController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Post('/')
-  @UseInterceptors(FileInterceptor('gambar', multerOptions))
+  @UseInterceptors(FileInterceptor('gambar'))
   async createNewKonten(
     @Body() createBeritaDto: CreateBeritaDto,
     @UploadedFile() gambar: Express.Multer.File,
   ) {
     try {
-      if (!gambar) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      createBeritaDto.gambar = gambar.path;
-      return await this.kontenService.createKonten(createBeritaDto);
+      return await this.kontenService.createKonten(createBeritaDto, gambar);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -61,24 +54,17 @@ export class KontenController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Put('/:id')
-  @UseInterceptors(FileInterceptor('gambar', multerOptions))
+  @UseInterceptors(FileInterceptor('gambar'))
   async updateKontem(
     @UploadedFile() gambar: Express.Multer.File,
     @Param('id') id: number,
     @Body() updateBeritaDto: UpdateBeritaDto,
   ) {
     try {
-      if (!gambar) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      updateBeritaDto.gambar = gambar.path;
-      return await this.kontenService.updateKonten(updateBeritaDto, id);
+      return await this.kontenService.updateKonten(updateBeritaDto, id, gambar);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

@@ -1,22 +1,39 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Berita } from 'recipe/entities/Berita';
 import {
   CreateBeritaParams,
   UpdateBeritaParams,
 } from 'recipe/utils/Berita.utils';
+import { UploadService } from 'src/cloudinary/service/service.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class KontenService {
   constructor(
-    @InjectRepository(Berita) private kontenRepository: Repository<Berita>,
+    @InjectRepository(Berita)
+    private kontenRepository: Repository<Berita>,
+    private uploadCloudinary: UploadService,
   ) {}
 
-  async createKonten(createBeritaParams: CreateBeritaParams) {
+  async createKonten(
+    createBeritaParams: CreateBeritaParams,
+    foto: Express.Multer.File,
+  ) {
+    if (!foto) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Please Upload Foto',
+      };
+    }
+    const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
     const now = new Date();
     const newKonten = this.kontenRepository.create({
       ...createBeritaParams,
+      gambar: res.url,
       createdAt: now,
       updateAt: now,
     });
@@ -29,26 +46,55 @@ export class KontenService {
       message: 'Success Create Data Konten',
     };
   }
-  async updateKonten(updateBeritaParams: UpdateBeritaParams, id: number) {
-    const now = new Date();
-    const data = await this.kontenRepository.update(
-      { id },
-      { ...updateBeritaParams, updateAt: now },
-    );
+  async updateKonten(
+    updateBeritaParams: UpdateBeritaParams,
+    id: number,
+    foto: Express.Multer.File,
+  ) {
+    if (!foto) {
+      const now = new Date();
+      const data = await this.kontenRepository.update(
+        { id },
+        { ...updateBeritaParams, updateAt: now },
+      );
 
-    if (data.affected === 0) {
+      if (data.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Data Not Found',
+        };
+      }
+
       return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        status: 'Failed',
-        message: 'Data Not Found',
+        statusCode: HttpStatus.OK,
+        status: 'Success',
+        message: 'Success Update Data Konten',
+      };
+    } else {
+      const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      const now = new Date();
+      const data = await this.kontenRepository.update(
+        { id },
+        { ...updateBeritaParams, updateAt: now, gambar: res.url },
+      );
+
+      if (data.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Data Not Found',
+        };
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        status: 'Success',
+        message: 'Success Update Data Konten',
       };
     }
-
-    return {
-      statusCode: HttpStatus.OK,
-      status: 'Success',
-      message: 'Success Update Data Konten',
-    };
   }
   async getAllDataKonten() {
     const data = await this.kontenRepository.find({

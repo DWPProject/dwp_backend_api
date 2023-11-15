@@ -38,23 +38,16 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Post()
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async createAnggota(
     @UploadedFile() foto: Express.Multer.File,
     @Body() createAnggotaDto: CreateAnggotaDto,
   ) {
     try {
-      if (!foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      createAnggotaDto.foto = foto.path;
-      return await this.anggotaService.createAnggota(createAnggotaDto);
+      return await this.anggotaService.createAnggota(createAnggotaDto, foto);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -64,24 +57,21 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Put(':id')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async updateAnggota(
     @UploadedFile() foto: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAnggotaDto: UpdateAnggotaDto,
   ) {
     try {
-      if (!foto) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'File Not Null',
-        };
-      }
-      updateAnggotaDto.foto = foto.path;
-      return await this.anggotaService.updateAnggota(updateAnggotaDto, id);
+      return await this.anggotaService.updateAnggota(
+        updateAnggotaDto,
+        id,
+        foto,
+      );
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -91,8 +81,8 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteAnggota(@Param('id', ParseIntPipe) id: number) {
     try {
