@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartItem } from 'recipe/entities/CartItem';
 import { Repository, EntityManager } from 'typeorm';
@@ -9,6 +9,7 @@ import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { CreateOrderProductParams } from 'recipe/utils/orderProduct';
 import { OrderService } from 'src/admin/order/service/order/order.service';
+import { UploadService } from 'src/cloudinary/service/service.service';
 
 @Injectable()
 export class CartItemService {
@@ -19,6 +20,7 @@ export class CartItemService {
     private orderProductService: OrderService,
     private buyerHistoryService: BuyerHistoryService,
     private entityManager: EntityManager,
+    private uploadCloudinary: UploadService,
   ) {}
 
   async createItem(createCartItemParams: CreateCartItemParams) {
@@ -95,21 +97,30 @@ export class CartItemService {
   }
 
   async orderNow(
+    foto: Express.Multer.File,
     userId: string,
-    foto: string,
     purchase: number,
     id: string,
     address: string,
   ) {
     return this.entityManager.transaction(async (transactionEntityManager) => {
-      const listItem = await this.getDataCartItemService(userId);
-
+      if (!foto) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Please Upload Foto',
+        };
+      }
+      const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
       // Membuat History Pemesanan
+      const listItem = await this.getDataCartItemService(userId);
       const data = new CreateBuyerHistoryParams();
       data.id_user = userId;
       data.note = listItem.payload[0].note;
       data.purchase = purchase;
-      data.payment = foto;
+      data.payment = res.url;
       data.price = listItem.price;
       data.address = address;
 

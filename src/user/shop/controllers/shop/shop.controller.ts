@@ -67,7 +67,7 @@ export class ShopController {
   }
 
   @Post('/cart')
-  @UseInterceptors(FileInterceptor('foto', multerOptions))
+  @UseInterceptors(FileInterceptor('foto'))
   async orderShopUser(
     @Body() getDataItemDto: GetDataItemDto,
     @UploadedFile() foto: Express.Multer.File,
@@ -75,8 +75,8 @@ export class ShopController {
     try {
       const id = RandomStringGenerator();
       return await this.cartService.orderNow(
+        foto,
         getDataItemDto.user_id,
-        foto.path,
         getDataItemDto.purchase,
         id,
         getDataItemDto.address,
