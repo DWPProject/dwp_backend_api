@@ -122,6 +122,22 @@ export class ProductService {
       message: 'Success Sell Product',
     };
   }
+  async unsellProduct(id: string) {
+    const result = await this.produkRepository.update({ id }, { jual: false });
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Data Not Found',
+      };
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success unSell Product',
+    };
+  }
 
   async getDataSellProduct() {
     const data = await this.produkRepository

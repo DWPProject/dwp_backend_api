@@ -55,6 +55,21 @@ export class ProductController {
   // @UseGuards(AuthGuard)
   // @SetMetadata('roles', ['admin'])
   // @UseGuards(RolesMiddleware)
+  @Put('sellProduct/:id')
+  async unsellProduct(@Param('id') id: string) {
+    try {
+      return await this.productService.unsellProduct(id);
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  // @UseGuards(AuthGuard)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Get('sellProduct')
   async getSellProduct() {
     try {
