@@ -239,8 +239,8 @@ export class AuthService {
       id: data.id,
       email: data.email,
       level: data.level,
-      nama_toko : data.nama_toko,
-      username : data.username
+      nama_toko: data.nama_toko,
+      username: data.username,
     };
 
     return {
