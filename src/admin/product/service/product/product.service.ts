@@ -134,6 +134,7 @@ export class ProductService {
         'produk.id',
         'produk.nama',
         'produk.foto',
+        'produk.harga',
         'produk.stok',
         'produk.kategori',
       ])
@@ -159,6 +160,7 @@ export class ProductService {
         'produk.id',
         'produk.nama',
         'produk.foto',
+        'produk.harga',
         'produk.stok',
         'produk.kategori',
       ])
