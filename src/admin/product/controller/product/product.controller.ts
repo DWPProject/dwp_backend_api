@@ -38,8 +38,8 @@ export class ProductController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Put('bankProduct/:id')
   async sellProduct(@Param('id') id: string) {
     try {
@@ -53,8 +53,8 @@ export class ProductController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Get('sellProduct')
   async getSellProduct() {
     try {
@@ -68,8 +68,8 @@ export class ProductController {
   }
 
   // @UseGuards(AuthGuard)
-  @SetMetadata('roles', ['admin'])
-  @UseGuards(RolesMiddleware)
+  // @SetMetadata('roles', ['admin'])
+  // @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteDataProduct(@Param('id') id: string) {
     try {

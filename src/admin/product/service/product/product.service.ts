@@ -127,15 +127,14 @@ export class ProductService {
     const data = await this.produkRepository
       .createQueryBuilder('produk')
       .select([
-        'users.id AS id_penjual',
+        'users.id',
         'users.nama_toko',
-        'users.profil AS profile_penjual',
+        'users.profil',
         'users.username',
-        'produk.id AS id_produk',
+        'produk.id',
         'produk.nama',
-        'produk.foto AS gambar_produk',
+        'produk.foto',
         'produk.stok',
-        'produk.id_penjual',
         'produk.kategori',
       ])
       .leftJoin('produk.user', 'users')
@@ -153,15 +152,14 @@ export class ProductService {
     const data = await this.produkRepository
       .createQueryBuilder('produk')
       .select([
-        'users.id AS id_penjual',
+        'users.id',
         'users.nama_toko',
-        'users.profil AS profile_penjual',
+        'users.profil',
         'users.username',
-        'produk.id AS id_produk',
+        'produk.id',
         'produk.nama',
-        'produk.foto AS gambar_produk',
+        'produk.foto',
         'produk.stok',
-        'produk.id_penjual',
         'produk.kategori',
       ])
       .leftJoin('produk.user', 'users')
