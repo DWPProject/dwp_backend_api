@@ -16,3 +16,9 @@ export class GetDataItemDto {
   purchase: number;
   address: string;
 }
+export class CreateOrderUserCart {
+  userId: string;
+  purchase: number;
+  id: string;
+  address: string;
+}

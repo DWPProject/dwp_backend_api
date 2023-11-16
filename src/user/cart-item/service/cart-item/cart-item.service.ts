@@ -2,7 +2,10 @@ import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartItem } from 'recipe/entities/CartItem';
 import { Repository, EntityManager } from 'typeorm';
-import { CreateCartItemParams } from 'recipe/utils/CartItem.utils';
+import {
+  CreateCartItemParams,
+  CreateOrderUserCartParams,
+} from 'recipe/utils/CartItem.utils';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
@@ -10,6 +13,7 @@ import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils'
 import { CreateOrderProductParams } from 'recipe/utils/orderProduct';
 import { OrderService } from 'src/admin/order/service/order/order.service';
 import { UploadService } from 'src/cloudinary/service/service.service';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class CartItemService {
@@ -98,12 +102,24 @@ export class CartItemService {
 
   async orderNow(
     foto: Express.Multer.File,
-    userId: string,
-    purchase: number,
-    id: string,
-    address: string,
+    createOrderParams: CreateOrderUserCartParams,
   ) {
     return this.entityManager.transaction(async (transactionEntityManager) => {
+      const user = new CreateOrderUserCartParams();
+      user.id = createOrderParams.id;
+      user.address = createOrderParams.address;
+      user.purchase = createOrderParams.purchase;
+      user.userId = createOrderParams.userId;
+
+      const errors = await validate(user);
+      if (errors.length > 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Validation failed',
+          errors: errors.map((error) => Object.values(error.constraints)),
+        };
+      }
       if (!foto) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
@@ -115,19 +131,21 @@ export class CartItemService {
         throw new BadRequestException('Invalid file type.');
       });
       // Membuat History Pemesanan
-      const listItem = await this.getDataCartItemService(userId);
+      const listItem = await this.getDataCartItemService(
+        createOrderParams.userId,
+      );
       const data = new CreateBuyerHistoryParams();
-      data.id_user = userId;
+      data.id_user = createOrderParams.userId;
       data.note = listItem.payload[0].note;
-      data.purchase = purchase;
+      data.purchase = createOrderParams.purchase;
       data.payment = res.url;
       data.price = listItem.price;
-      data.address = address;
+      data.address = createOrderParams.address;
 
       await this.buyerHistoryService.createHistoryUser(
         data,
         transactionEntityManager,
-        id,
+        createOrderParams.id,
       );
       for (const item of listItem.payload) {
         // Mengurangi Product
@@ -139,7 +157,7 @@ export class CartItemService {
 
         // Masukin Relasi Produk ke Pesanan
         const orderProduct = new CreateOrderProductParams();
-        orderProduct.buyerHistoryId = id;
+        orderProduct.buyerHistoryId = createOrderParams.id;
         orderProduct.produkId = item.product_id;
         orderProduct.quantity = item.quantity;
         await this.orderProductService.createOrderProduct(

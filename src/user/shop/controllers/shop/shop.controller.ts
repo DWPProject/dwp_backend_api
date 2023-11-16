@@ -10,7 +10,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateCartItemDto, GetDataItemDto } from 'recipe/dto/CartItem.dto';
+import {
+  CreateCartItemDto,
+  CreateOrderUserCart,
+  GetDataItemDto,
+} from 'recipe/dto/CartItem.dto';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from 'src/admin/product/service/product/product.service';
@@ -69,18 +73,13 @@ export class ShopController {
   @Post('/cart')
   @UseInterceptors(FileInterceptor('foto'))
   async orderShopUser(
-    @Body() getDataItemDto: GetDataItemDto,
+    @Body() getDataItemDto: CreateOrderUserCart,
     @UploadedFile() foto: Express.Multer.File,
   ) {
     try {
       const id = RandomStringGenerator();
-      return await this.cartService.orderNow(
-        foto,
-        getDataItemDto.user_id,
-        getDataItemDto.purchase,
-        id,
-        getDataItemDto.address,
-      );
+      getDataItemDto.id = id;
+      return await this.cartService.orderNow(foto, getDataItemDto);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
