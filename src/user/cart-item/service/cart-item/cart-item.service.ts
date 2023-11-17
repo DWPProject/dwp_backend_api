@@ -53,6 +53,7 @@ export class CartItemService {
     const listItem = await this.cartItemRepository
       .createQueryBuilder('cart_item')
       .select([
+        'cart_item.id',
         'produk.nama',
         'cart_item.quantity',
         'cart_item.note',
