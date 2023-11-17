@@ -43,7 +43,7 @@ export class ShopController {
   // @UseGuards(AuthGuard)
   // @SetMetadata('roles', ['user'])
   // @UseGuards(RolesMiddleware)
-  @Post('/cart')
+  @Post('/getCart')
   async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
       return await this.cartService.getDataCartItem(getDataItemDto.user_id);
@@ -70,7 +70,7 @@ export class ShopController {
     }
   }
 
-  @Post('/getCart')
+  @Post('/cart')
   @UseInterceptors(FileInterceptor('foto'))
   async orderShopUser(
     @Body() getDataItemDto: CreateOrderUserCart,
