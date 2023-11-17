@@ -43,7 +43,7 @@ export class ShopController {
   // @UseGuards(AuthGuard)
   // @SetMetadata('roles', ['user'])
   // @UseGuards(RolesMiddleware)
-  @Get('/cart')
+  @Post('/cart')
   async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
       return await this.cartService.getDataCartItem(getDataItemDto.user_id);
