@@ -70,7 +70,7 @@ export class ShopController {
     }
   }
 
-  @Post('/cart')
+  @Post('/getCart')
   @UseInterceptors(FileInterceptor('foto'))
   async orderShopUser(
     @Body() getDataItemDto: CreateOrderUserCart,
