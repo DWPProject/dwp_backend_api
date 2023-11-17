@@ -16,6 +16,10 @@ export class GetDataItemParams {
   user_id: string;
 }
 
+export class DeleteCartParams {
+  id: number;
+}
+
 export class CreateOrderUserCartParams {
   @IsNotEmpty()
   userId: string;

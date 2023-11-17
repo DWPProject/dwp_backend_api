@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Post,
@@ -15,6 +16,7 @@ import {
   CreateOrderUserCart,
   GetDataItemDto,
 } from 'recipe/dto/CartItem.dto';
+import { DeleteCartParams } from 'recipe/utils/CartItem.utils';
 import { RandomStringGenerator } from 'recipe/utils/randomStringGenerator.utils';
 import { multerOptions } from 'recipe/utils/uploadFile';
 import { ProductService } from 'src/admin/product/service/product/product.service';
@@ -62,6 +64,18 @@ export class ShopController {
   async addToCart(@Body() createCartItemDto: CreateCartItemDto) {
     try {
       return await this.cartService.createItem(createCartItemDto);
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @Delete('/cart')
+  async deleteItemCart(@Body() deleteItemCart: DeleteCartParams) {
+    try {
+      return await this.cartService.deleteItemCart(deleteItemCart);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

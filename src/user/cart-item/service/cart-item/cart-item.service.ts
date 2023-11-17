@@ -5,6 +5,7 @@ import { Repository, EntityManager } from 'typeorm';
 import {
   CreateCartItemParams,
   CreateOrderUserCartParams,
+  DeleteCartParams,
 } from 'recipe/utils/CartItem.utils';
 import { ProductService } from 'src/admin/product/service/product/product.service';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
@@ -171,5 +172,23 @@ export class CartItemService {
         message: 'Success Order',
       };
     });
+  }
+
+  async deleteItemCart(deleteCartParams: DeleteCartParams) {
+    const result = await this.cartItemRepository.delete(deleteCartParams.id);
+
+    if (result.affected === 0) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        status: 'Failed',
+        message: 'Id Cart Not Found',
+      };
+    }
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      status: 'successs',
+      message: 'Success Delete Cart Item',
+    };
   }
 }
