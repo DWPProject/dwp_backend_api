@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { ReportDto } from 'recipe/dto/Report.dto';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
@@ -6,7 +6,7 @@ import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-histor
 export class ReportController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
-  @Get('/')
+  @Post('/')
   async reportOrderAdmin(@Body() reportDto: ReportDto) {
     try {
       return await this.buyerHistoryService.reportOrder(

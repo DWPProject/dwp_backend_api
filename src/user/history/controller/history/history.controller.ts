@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { GlobalDto } from 'recipe/dto/Globa.dto';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
@@ -6,7 +6,7 @@ import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-histor
 export class HistoryController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
-  @Get('/decline')
+  @Post('/decline')
   async getDataHistoryDecline(@Body() globalDto: GlobalDto) {
     try {
       return await this.buyerHistoryService.declineOrder(globalDto.id);
@@ -17,7 +17,7 @@ export class HistoryController {
       };
     }
   }
-  @Get('/accept')
+  @Post('/accept')
   async getDataHistoryAccept(@Body() globalDto: GlobalDto) {
     try {
       return await this.buyerHistoryService.orderHistoryFinish(globalDto.id);
@@ -28,7 +28,7 @@ export class HistoryController {
       };
     }
   }
-  @Get('/ongoing')
+  @Post('/ongoing')
   async getDataHistoryOnGoing(@Body() globalDto: GlobalDto) {
     try {
       return await this.buyerHistoryService.orderHistoryOnGoing(globalDto.id);
