@@ -28,7 +28,9 @@ export class KontenService {
       };
     }
     const res = await this.uploadCloudinary.uploadImage(foto).catch(() => {
-      throw new BadRequestException('Invalid file type.');
+      throw new BadRequestException(
+        'Invalid file type or File Limit only 20mb',
+      );
     });
     const now = new Date();
     const newKonten = this.kontenRepository.create({
