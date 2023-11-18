@@ -7,7 +7,7 @@ import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-histor
 export class OrderSellerController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
-  @Get('/')
+  @Post('/')
   async getDataOrderSeller(@Body() globalDto: GlobalDto) {
     try {
       return await this.buyerHistoryService.getDataOrderSeller(globalDto.id);

@@ -315,7 +315,7 @@ export class BuyerHistoryService {
       .where('buyer_history.payment_status = :payment_status', {
         payment_status: true,
       })
-      .andWhere('buyer_history.id_user = :id', {
+      .andWhere('produk.id_penjual = :id', {
         id: id_user,
       })
       .orderBy('buyer_history.order_date', 'DESC')
