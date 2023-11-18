@@ -343,7 +343,7 @@ export class BuyerHistoryService {
   }
 
   async orderHistoryFinish(id: string) {
-    const data = this.buyerHistoryRepo.find({
+    const data = await this.buyerHistoryRepo.find({
       where: {
         id_user: id,
         status: 'Pesanan Selesai',
@@ -359,7 +359,7 @@ export class BuyerHistoryService {
   }
 
   async orderHistoryOnGoing(id: string) {
-    const data = this.buyerHistoryRepo.find({
+    const data = await this.buyerHistoryRepo.find({
       where: {
         id_user: id,
         status: 'DiProses',
@@ -375,7 +375,7 @@ export class BuyerHistoryService {
   }
 
   async orderHistoryDecline(id: string) {
-    const data = this.buyerHistoryRepo.find({
+    const data = await this.buyerHistoryRepo.find({
       where: {
         id_user: id,
         status: 'Pesanan Ditolak',
