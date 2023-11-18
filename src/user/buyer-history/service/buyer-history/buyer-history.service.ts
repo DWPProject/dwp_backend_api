@@ -143,6 +143,7 @@ export class BuyerHistoryService {
         'buyer_history.order_date AS order_date',
         'produk.nama AS nama',
         'produk.foto AS foto',
+        'users.nama_toko AS nama_toko',
         'order_product.quantity AS quantity',
         'produk.harga AS harga',
         '(produk.harga * order_product.quantity) AS total_harga',
