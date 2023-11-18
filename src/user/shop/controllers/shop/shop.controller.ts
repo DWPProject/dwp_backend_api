@@ -72,7 +72,7 @@ export class ShopController {
     }
   }
 
-  @Delete('/cart')
+  @Post('/cart')
   async deleteItemCart(@Body() deleteItemCart: DeleteCartParams) {
     try {
       return await this.cartService.deleteItemCart(deleteItemCart);
