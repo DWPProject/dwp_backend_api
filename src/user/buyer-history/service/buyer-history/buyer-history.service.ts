@@ -143,7 +143,6 @@ export class BuyerHistoryService {
         'buyer_history.order_date AS order_date',
         'produk.nama AS nama',
         'produk.foto AS foto',
-        'users.nama_toko AS nama_toko',
         'order_product.quantity AS quantity',
         'produk.harga AS harga',
         '(produk.harga * order_product.quantity) AS total_harga',
@@ -157,6 +156,13 @@ export class BuyerHistoryService {
           .where('users.id = produk.id_penjual');
         return subQuery;
       }, 'type_seller')
+      .addSelect((subQuery) => {
+        subQuery
+          .select('users.nama_toko', 'nama_toko')
+          .from('users', 'users')
+          .where('users.id = produk.id_penjual');
+        return subQuery;
+      }, 'nama_toko')
       .leftJoin('buyer_history.orderProduct', 'order_product')
       .leftJoin('order_product.product', 'produk')
       .leftJoin('buyer_history.user', 'users')
