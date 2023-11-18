@@ -97,7 +97,7 @@ export class ShopController {
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: `${error}tets`,
+        error: `${error}`,
       };
     }
   }

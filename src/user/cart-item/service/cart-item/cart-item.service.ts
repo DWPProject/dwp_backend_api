@@ -38,7 +38,7 @@ export class CartItemService {
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
-      message: 'Success Create Data',
+      message: 'Success Add To Cart',
     };
   }
 
@@ -149,23 +149,32 @@ export class CartItemService {
         transactionEntityManager,
         createOrderParams.id,
       );
-      for (const item of listItem.payload) {
-        // Mengurangi Product
-        await this.productService.orderProduct(
-          item.product_id,
-          item.quantity,
-          transactionEntityManager,
-        );
 
-        // Masukin Relasi Produk ke Pesanan
-        const orderProduct = new CreateOrderProductParams();
-        orderProduct.buyerHistoryId = createOrderParams.id;
-        orderProduct.produkId = item.product_id;
-        orderProduct.quantity = item.quantity;
-        await this.orderProductService.createOrderProduct(
-          orderProduct,
-          transactionEntityManager,
-        );
+      // const insufficientStockErrors = [];
+      for (const item of listItem.payload) {
+        try {
+          // Mengurangi Product
+          await this.productService.orderProduct(
+            item.product_id,
+            item.quantity,
+            transactionEntityManager,
+          );
+          // Masukin Relasi Produk ke Pesanan
+          const orderProduct = new CreateOrderProductParams();
+          orderProduct.buyerHistoryId = createOrderParams.id;
+          orderProduct.produkId = item.product_id;
+          orderProduct.quantity = item.quantity;
+          await this.orderProductService.createOrderProduct(
+            orderProduct,
+            transactionEntityManager,
+          );
+        } catch (error) {
+          if (error.message.includes('Stok produk tidak mencukupi.')) {
+            throw new Error('Stok tidak mencukupi');
+          } else {
+            throw new Error('Produk Sedang tidak dijual');
+          }
+        }
       }
       return {
         statusCode: HttpStatus.OK,

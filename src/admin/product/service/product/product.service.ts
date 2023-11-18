@@ -197,6 +197,7 @@ export class ProductService {
       const result = await transactionalManager.findOne(Produk, {
         where: {
           id: id,
+          jual: true,
         },
         lock: {
           mode: 'pessimistic_write',
