@@ -9,7 +9,7 @@ export class HistoryController {
   @Post('/decline')
   async getDataHistoryDecline(@Body() globalDto: GlobalDto) {
     try {
-      return await this.buyerHistoryService.declineOrder(globalDto.id);
+      return await this.buyerHistoryService.orderHistoryDecline(globalDto.id);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

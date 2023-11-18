@@ -309,7 +309,7 @@ export class BuyerHistoryService {
         'buyer_history.status',
         'buyer_history.payment',
         'buyer_history.price',
-        'buyer_history.address',
+        'buyer_history',
         'produk.foto',
         'produk.nama',
         'produk.id_penjual',

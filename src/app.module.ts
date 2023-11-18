@@ -26,7 +26,6 @@ import { ReportSellerModule } from './penjual/report-seller/report-seller.module
 import { OverviewModule } from './admin/overview/overview.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import path from 'path';
 
 @Module({
   imports: [
