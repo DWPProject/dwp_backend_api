@@ -1,6 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
+import { OrderProduct } from 'recipe/entities/OrderProduct';
+import { Produk } from 'recipe/entities/Produk';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
 import { EntityManager, Repository } from 'typeorm';
 @Injectable()
@@ -343,50 +345,86 @@ export class BuyerHistoryService {
   }
 
   async orderHistoryFinish(id: string) {
-    const data = await this.buyerHistoryRepo.find({
-      where: {
-        id_user: id,
-        status: 'Pesanan Selesai',
-      },
-    });
+    const result = await this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select([
+        'produk.foto',
+        'produk.nama',
+        'order_product.quantity',
+        'buyer_history.status',
+        '(order_product.quantity * produk.harga) AS price',
+      ])
+      .leftJoin(
+        OrderProduct,
+        'order_product',
+        'buyer_history.id = order_product.buyerHistoryId',
+      )
+      .leftJoin(Produk, 'produk', 'order_product.productId = produk.id')
+      .where('buyer_history.id_user = :id', { id })
+      .andWhere('buyer_history.status = :status', { status: 'Pesanan Selesai' })
+      .getRawMany();
 
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
       message: 'Success Get Order History',
-      data: data,
+      data: result,
     };
   }
 
   async orderHistoryOnGoing(id: string) {
-    const data = await this.buyerHistoryRepo.find({
-      where: {
-        id_user: id,
-        status: 'DiProses',
-      },
-    });
+    const result = await this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select([
+        'produk.foto',
+        'produk.nama',
+        'order_product.quantity',
+        'buyer_history.status',
+        '(order_product.quantity * produk.harga) AS price',
+      ])
+      .leftJoin(
+        OrderProduct,
+        'order_product',
+        'buyer_history.id = order_product.buyerHistoryId',
+      )
+      .leftJoin(Produk, 'produk', 'order_product.productId = produk.id')
+      .where('buyer_history.id_user = :id', { id })
+      .andWhere('buyer_history.status = :status', { status: 'DiProses' })
+      .getRawMany();
 
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
       message: 'Success Get Order History',
-      data: data,
+      data: result,
     };
   }
 
   async orderHistoryDecline(id: string) {
-    const data = await this.buyerHistoryRepo.find({
-      where: {
-        id_user: id,
-        status: 'Pesanan Ditolak',
-      },
-    });
+    const result = await this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select([
+        'produk.foto',
+        'produk.nama',
+        'order_product.quantity',
+        'buyer_history.status',
+        '(order_product.quantity * produk.harga) AS price',
+      ])
+      .leftJoin(
+        OrderProduct,
+        'order_product',
+        'buyer_history.id = order_product.buyerHistoryId',
+      )
+      .leftJoin(Produk, 'produk', 'order_product.productId = produk.id')
+      .where('buyer_history.id_user = :id', { id })
+      .andWhere('buyer_history.status = :status', { status: 'Pesanan Ditolak' })
+      .getRawMany();
 
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
       message: 'Success Get Order History',
-      data: data,
+      data: result,
     };
   }
 }
