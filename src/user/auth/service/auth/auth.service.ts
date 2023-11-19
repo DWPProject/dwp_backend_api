@@ -254,7 +254,6 @@ export class AuthService {
         email: forgotPasswordParams.email,
       },
     });
-    console.log(data);
 
     if (!data) {
       return {
@@ -380,4 +379,25 @@ export class AuthService {
   }
 
   async LogoutUser(logoutUserParams: LogoutUserParams) {}
+
+  async getDataUser(id: string) {
+    const result = await this.userRepository
+      .createQueryBuilder('users')
+      .select([
+        'users.username',
+        'users.email',
+        'users.nama_toko',
+        'users.profil',
+        'users.telepon',
+      ])
+      .where('users.id = :userId', { userId: id })
+      .getOne();
+
+    return {
+      statusCode: HttpStatus.ACCEPTED,
+      status: 'successs',
+      message: 'Success Get Data User',
+      data: result,
+    };
+  }
 }

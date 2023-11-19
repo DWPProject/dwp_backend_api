@@ -15,6 +15,7 @@ import {
   forgotPasswordDto,
 } from 'recipe/dto/User.dto';
 import { UpdateUserParams } from 'recipe/utils/User.utils';
+import { GlobalDto } from 'recipe/dto/Globa.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -58,6 +59,18 @@ export class AuthController {
   async forgotPassword(@Body() forgotPasswordDto: forgotPasswordDto) {
     try {
       return await this.authService.forgotPassword(forgotPasswordDto);
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @Post('/profile')
+  async getProfileUser(@Body() globalDto: GlobalDto) {
+    try {
+      return await this.authService.getDataUser(globalDto.id);
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
