@@ -81,7 +81,7 @@ export class SellerController {
     }
   }
 
-  @Delete('/')
+  @Post('/delete')
   async deleteAccSeller(@Body() deleteAccSeller: DeleteAccSeller) {
     try {
       return await this.userService.DeleteAccSeller(deleteAccSeller);
