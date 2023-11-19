@@ -18,10 +18,10 @@ export class ProductService {
     private uploadCloudinary: UploadService,
   ) {}
 
-  async findProductById(deleteAccSeller: DeleteAccSeller) {
+  async findProductById(id: string) {
     const data = await this.produkRepository.find({
       where: {
-        id_penjual: deleteAccSeller.id,
+        id_penjual: id,
       },
     });
 

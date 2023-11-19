@@ -295,8 +295,8 @@ export class AuthService {
     };
   }
   async DeleteAccSeller(deleteSellerParams: DeleteSellerParams) {
-    const result = await this.productSvc.findProductById(deleteSellerParams);
-    if (result) {
+    const result = await this.productSvc.findProductById(deleteSellerParams.id);
+    if (result[0]) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         status: 'failed',
