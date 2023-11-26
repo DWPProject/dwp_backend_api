@@ -123,6 +123,19 @@ export class OverviewController {
         oktober: oct,
         november: nov,
         desember: des,
+        total:
+          jan.pendapatan +
+          feb.pendapatan +
+          mar.pendapatan +
+          apr.pendapatan +
+          may.pendapatan +
+          june.pendapatan +
+          july.pendapatan +
+          aug.pendapatan +
+          sept.pendapatan +
+          oct.pendapatan +
+          nov.pendapatan +
+          des.pendapatan,
       };
     } catch (error) {
       return {
