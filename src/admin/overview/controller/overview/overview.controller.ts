@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { OverviewDto, ReportDto } from 'recipe/dto/Report.dto';
 import { OrderService } from 'src/admin/order/service/order/order.service';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
@@ -10,7 +10,7 @@ export class OverviewController {
     private orderService: OrderService,
   ) {}
 
-  @Get('/')
+  @Post('/')
   async overviewAdmin(@Body() reportDto: OverviewDto) {
     try {
       const tahun = new Date().getFullYear();
@@ -132,7 +132,7 @@ export class OverviewController {
     }
   }
 
-  @Get('/populer')
+  @Post('/populer')
   async populerOrder(@Body() overviewDto: OverviewDto) {
     try {
       return await this.orderService.getPopulerProduk(overviewDto.id);
