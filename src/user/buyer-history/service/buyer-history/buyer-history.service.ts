@@ -181,7 +181,9 @@ export class BuyerHistoryService {
       });
     }
     if (end) {
-      query.andWhere('buyer_history.order_date <= :endDate', { endDate: end });
+      query.andWhere('buyer_history.order_date <= :endDate', {
+        endDate: `${end} 23:59:59.00`,
+      });
     }
     const result = await query.getRawMany();
 
