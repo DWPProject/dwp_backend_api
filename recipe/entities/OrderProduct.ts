@@ -16,6 +16,9 @@ export class OrderProduct {
   @Column()
   public quantity: number;
 
+  @Column({ nullable: true })
+  public status: string;
+
   @ManyToOne(() => BuyerHistory, (buyerHistory) => buyerHistory.orderProduct)
   @JoinColumn({ name: 'buyerHistoryId' })
   public buyerHistory: string;

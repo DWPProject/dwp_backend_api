@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
-import { GlobalDto } from 'recipe/dto/Globa.dto';
+import { GlobalDto, GlobalDtoFinish } from 'recipe/dto/Globa.dto';
 import { ChangeOrderStatusDto } from 'recipe/utils/orderProduct';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
@@ -59,9 +59,12 @@ export class OrderSellerController {
   }
 
   @Post('/finish')
-  async onGoingOrder(@Body() globaDto: GlobalDto) {
+  async onGoingOrder(@Body() globaDto: GlobalDtoFinish) {
     try {
-      return await this.buyerHistoryService.finishOrder(globaDto.id);
+      return await this.buyerHistoryService.finishOrder(
+        globaDto.idProduct,
+        globaDto.idOrder,
+      );
     } catch (error) {
       return {
         status: HttpStatus.INTERNAL_SERVER_ERROR,

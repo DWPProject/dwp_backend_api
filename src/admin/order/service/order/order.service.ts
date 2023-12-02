@@ -1,14 +1,15 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
 import { CreateOrderProductParams } from 'recipe/utils/orderProduct';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, Repository, Transaction } from 'typeorm';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(OrderProduct)
     private orderProductRepo: Repository<OrderProduct>,
+    private entityManager: EntityManager,
   ) {}
 
   async createOrderProduct(
@@ -23,6 +24,40 @@ export class OrderService {
 
       return await transactionManager.save(OrderProduct, data);
     });
+  }
+
+  async finishOrderProduct(buyerHistoryId: string, productId: string) {
+    return await this.entityManager.transaction(
+      async (transactionalEntityManager) => {
+        const orderProduct = await transactionalEntityManager
+          .createQueryBuilder(OrderProduct, 'orderProduct')
+          .setLock('pessimistic_write')
+          .where('orderProduct.buyerHistory = :buyerHistoryId', {
+            buyerHistoryId,
+          })
+          .andWhere('orderProduct.product = :productId', { productId })
+          .getOne();
+
+        if (!orderProduct) {
+          return false;
+        }
+
+        orderProduct.status = 'Pesanan Selesai';
+        await transactionalEntityManager.save(orderProduct);
+
+        return true;
+      },
+    );
+  }
+
+  async checkOrderProduct(buyerHistoryId: string) {
+    const result = await this.orderProductRepo
+      .createQueryBuilder('orderProduct')
+      .where('orderProduct.buyerHistory = :buyerHistoryId', { buyerHistoryId })
+      .andWhere('orderProduct.status IS NULL')
+      .getMany();
+
+    return result.length === 0;
   }
 
   async getPopulerProduk(id?: string) {

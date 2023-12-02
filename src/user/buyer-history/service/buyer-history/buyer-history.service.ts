@@ -1,15 +1,18 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { log } from 'console';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
 import { Produk } from 'recipe/entities/Produk';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
+import { OrderService } from 'src/admin/order/service/order/order.service';
 import { EntityManager, Repository } from 'typeorm';
 @Injectable()
 export class BuyerHistoryService {
   constructor(
     @InjectRepository(BuyerHistory)
     private buyerHistoryRepo: Repository<BuyerHistory>,
+    private orderService: OrderService,
   ) {}
 
   async createHistoryUser(
@@ -257,18 +260,22 @@ export class BuyerHistoryService {
     };
   }
 
-  async finishOrder(id: string) {
-    const result = await this.buyerHistoryRepo.update(
-      { id },
-      { status: 'Pesanan Selesai' },
-    );
+  async finishOrder(idProduct: string, idOrder: string) {
+    await this.orderService.finishOrderProduct(idOrder, idProduct);
+    const checkRes = await this.orderService.checkOrderProduct(idOrder);
+    if (checkRes) {
+      const result = await this.buyerHistoryRepo.update(
+        { id: idOrder },
+        { status: 'Pesanan Selesai' },
+      );
 
-    if (result.affected === 0) {
-      return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        status: 'Failed',
-        message: 'Data Not Found',
-      };
+      if (result.affected === 0) {
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          status: 'Failed',
+          message: 'Data Not Found',
+        };
+      }
     }
 
     return {
@@ -314,6 +321,7 @@ export class BuyerHistoryService {
         'buyer_history.payment',
         'buyer_history.price',
         'buyer_history',
+        'produk.id',
         'produk.foto',
         'produk.nama',
         'produk.id_penjual',

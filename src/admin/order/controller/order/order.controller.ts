@@ -58,15 +58,15 @@ export class OrderController {
     }
   }
 
-  @Post('/finish')
-  async onGoingOrder(@Body() globaDto: GlobalDto) {
-    try {
-      return await this.buyerHistoryService.finishOrder(globaDto.id);
-    } catch (error) {
-      return {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: `${error}`,
-      };
-    }
-  }
+  // @Post('/finish')
+  // async onGoingOrder(@Body() globaDto: GlobalDto) {
+  //   try {
+  //     return await this.buyerHistoryService.finishOrder(globaDto.id);
+  //   } catch (error) {
+  //     return {
+  //       status: HttpStatus.INTERNAL_SERVER_ERROR,
+  //       error: `${error}`,
+  //     };
+  //   }
+  // }
 }
