@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
 import { OrderService } from 'src/admin/order/service/order/order.service';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
+import { EmailService } from 'src/mailtrap/service/service.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BuyerHistory, OrderProduct])],
   controllers: [ReportSellerController],
-  providers: [BuyerHistoryService, OrderService],
+  providers: [BuyerHistoryService, OrderService, EmailService],
 })
 export class ReportSellerModule {}

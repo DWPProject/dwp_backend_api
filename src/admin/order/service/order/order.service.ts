@@ -26,26 +26,29 @@ export class OrderService {
     });
   }
 
-  async finishOrderProduct(buyerHistoryId: string, productId: string) {
+  async finishOrderProduct(buyerHistoryId: string, sellerid: string) {
     return await this.entityManager.transaction(
       async (transactionalEntityManager) => {
-        const orderProduct = await transactionalEntityManager
-          .createQueryBuilder(OrderProduct, 'orderProduct')
-          .setLock('pessimistic_write')
-          .where('orderProduct.buyerHistory = :buyerHistoryId', {
-            buyerHistoryId,
-          })
-          .andWhere('orderProduct.product = :productId', { productId })
-          .getOne();
+        try {
+          const result = await transactionalEntityManager
+            .createQueryBuilder()
+            .update('order_product') // Gunakan nama tabel dari database
+            .set({ status: 'Pesanan Selesai' })
+            .where('"buyerHistoryId" = :buyerHistoryId', { buyerHistoryId })
+            .andWhere(
+              '"productId" IN (SELECT "id" FROM produk WHERE id_penjual = :sellerid)',
+              { sellerid },
+            )
+            .execute();
 
-        if (!orderProduct) {
-          return false;
+          if (result.affected === 0) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          console.error('Error finishing order product:', error);
+          throw new Error('Failed to finish order product');
         }
-
-        orderProduct.status = 'Pesanan Selesai';
-        await transactionalEntityManager.save(orderProduct);
-
-        return true;
       },
     );
   }

@@ -1,11 +1,11 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { log } from 'console';
 import { BuyerHistory } from 'recipe/entities/BuyerHistory';
 import { OrderProduct } from 'recipe/entities/OrderProduct';
 import { Produk } from 'recipe/entities/Produk';
 import { CreateBuyerHistoryParams } from 'recipe/utils/buyerHistory.utils';
 import { OrderService } from 'src/admin/order/service/order/order.service';
+import { EmailService } from 'src/mailtrap/service/service.service';
 import { EntityManager, Repository } from 'typeorm';
 @Injectable()
 export class BuyerHistoryService {
@@ -13,6 +13,7 @@ export class BuyerHistoryService {
     @InjectRepository(BuyerHistory)
     private buyerHistoryRepo: Repository<BuyerHistory>,
     private orderService: OrderService,
+    private emailService: EmailService,
   ) {}
 
   async createHistoryUser(
@@ -239,6 +240,28 @@ export class BuyerHistoryService {
     };
   }
 
+  async getEmailSellerOrder(idOrder: string) {
+    const temp = [];
+    const query = await this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select('users.email', 'email')
+      .leftJoin('buyer_history.orderProduct', 'order_product')
+      .leftJoin('order_product.product', 'product')
+      .leftJoin('product.user', 'users') // Ganti 'user' dengan nama relasi yang sesuai dengan entitas Anda
+      .where('buyer_history.id = :idOrder', { idOrder })
+      .getRawMany();
+
+    query.map((item) => {
+      if (!temp.includes(item.email)) {
+        temp.push(item.email);
+      }
+    });
+
+    return temp;
+  }
+
+  async getDataOrderEmail(idOrder: string, email: string) {}
+
   async aproveOrder(id: string) {
     const result = await this.buyerHistoryRepo.update(
       { id },
@@ -253,6 +276,12 @@ export class BuyerHistoryService {
       };
     }
 
+    const email = await this.getEmailSellerOrder(id);
+
+    email.forEach(async (element) => {
+      await this.emailService.sendEmail(element, 'Order', 'Order');
+    });
+
     return {
       statusCode: HttpStatus.OK,
       status: 'Success',
@@ -260,8 +289,8 @@ export class BuyerHistoryService {
     };
   }
 
-  async finishOrder(idProduct: string, idOrder: string) {
-    await this.orderService.finishOrderProduct(idOrder, idProduct);
+  async finishOrder(sellerId: string, idOrder: string) {
+    await this.orderService.finishOrderProduct(idOrder, sellerId);
     const checkRes = await this.orderService.checkOrderProduct(idOrder);
     if (checkRes) {
       const result = await this.buyerHistoryRepo.update(

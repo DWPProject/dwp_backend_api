@@ -1,15 +1,22 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { GlobalDto } from 'recipe/dto/Globa.dto';
 import { ChangeOrderStatusDto } from 'recipe/utils/orderProduct';
+import { EmailService } from 'src/mailtrap/service/service.service';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
 @Controller('order')
 export class OrderController {
-  constructor(private buyerHistoryService: BuyerHistoryService) {}
+  constructor(
+    private buyerHistoryService: BuyerHistoryService,
+    private emailService: EmailService,
+  ) {}
 
   @Get('/')
   async getDataOrderAdmin() {
     try {
+      const data =
+        await this.buyerHistoryService.getEmailSellerOrder('e4389a195b');
+      console.log(data);
       return await this.buyerHistoryService.getDataOrderAdmin();
     } catch (error) {
       return {
@@ -57,16 +64,4 @@ export class OrderController {
       };
     }
   }
-
-  // @Post('/finish')
-  // async onGoingOrder(@Body() globaDto: GlobalDto) {
-  //   try {
-  //     return await this.buyerHistoryService.finishOrder(globaDto.id);
-  //   } catch (error) {
-  //     return {
-  //       status: HttpStatus.INTERNAL_SERVER_ERROR,
-  //       error: `${error}`,
-  //     };
-  //   }
-  // }
 }

@@ -4,5 +4,5 @@ export class GlobalDto {
 
 export class GlobalDtoFinish {
   idOrder: string;
-  idProduct: string;
+  idSeller: string;
 }

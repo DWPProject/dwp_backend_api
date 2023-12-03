@@ -26,10 +26,40 @@ import { ReportSellerModule } from './penjual/report-seller/report-seller.module
 import { OverviewModule } from './admin/overview/overview.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { MailtrapModule } from './mailtrap/mailtrap.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import * as path from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    MailerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: configService.get<string>('EMAIL_USER'),
+            pass: configService.get<string>('EMAIL_PASS'),
+          },
+        },
+        template: {
+          dir: path.join(__dirname, '..', '..', 'recipe/template'),
+          adapter: new HandlebarsAdapter(undefined, {
+            inlineCssEnabled: true,
+            inlineCssOptions: {
+              url: ' ',
+              preserveMediaQueries: true,
+            },
+          }),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
     RouterModule.register([
       {
         path: 'api',
@@ -147,6 +177,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     OverviewModule,
     WhatsappModule,
     CloudinaryModule,
+    MailtrapModule,
   ],
 })
 export class AppModule {}

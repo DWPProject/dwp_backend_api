@@ -62,7 +62,7 @@ export class OrderSellerController {
   async onGoingOrder(@Body() globaDto: GlobalDtoFinish) {
     try {
       return await this.buyerHistoryService.finishOrder(
-        globaDto.idProduct,
+        globaDto.idSeller,
         globaDto.idOrder,
       );
     } catch (error) {
