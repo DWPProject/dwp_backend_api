@@ -14,9 +14,6 @@ export class OrderController {
   @Get('/')
   async getDataOrderAdmin() {
     try {
-      const data =
-        await this.buyerHistoryService.getEmailSellerOrder('e4389a195b');
-      console.log(data);
       return await this.buyerHistoryService.getDataOrderAdmin();
     } catch (error) {
       return {
