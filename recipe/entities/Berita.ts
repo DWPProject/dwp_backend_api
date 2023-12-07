@@ -8,7 +8,7 @@ export class Berita {
   @Column()
   judul: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   deskripsi: string;
 
   @Column()

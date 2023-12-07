@@ -355,6 +355,7 @@ export class BuyerHistoryService {
         'produk.nama',
         'produk.id_penjual',
         'order_product.quantity',
+        'order_product.status',
         'produk.harga',
         '(produk.harga * order_product.quantity) AS total_harga',
       ])
