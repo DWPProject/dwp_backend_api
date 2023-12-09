@@ -42,8 +42,6 @@ export class ShopController {
     }
   }
 
-  @SetMetadata('roles', ['user'])
-  @UseGuards(RolesMiddleware)
   @Post('/getCart')
   async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
