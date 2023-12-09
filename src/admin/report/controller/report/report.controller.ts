@@ -15,7 +15,7 @@ import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-histor
 export class ReportController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
-  @SetMetadata('roles', ['penjual'])
+  @SetMetadata('roles', ['admin'])
   @UseGuards(RolesMiddleware)
   @Post('/')
   async reportOrderAdmin(@Body() reportDto: ReportDto) {
