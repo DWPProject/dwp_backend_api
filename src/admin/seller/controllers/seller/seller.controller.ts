@@ -26,8 +26,8 @@ export class SellerController {
   constructor(private userService: AuthService) {}
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('foto'))
   async createAccSeller(
@@ -47,6 +47,8 @@ export class SellerController {
     }
   }
 
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/update')
   @UseInterceptors(FileInterceptor('foto'))
   async updateSellerAcc(
@@ -67,8 +69,8 @@ export class SellerController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Get('/')
   async getDataUserSeller() {
     try {
@@ -81,6 +83,8 @@ export class SellerController {
     }
   }
 
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/delete')
   async deleteAccSeller(@Body() deleteAccSeller: DeleteAccSeller) {
     try {

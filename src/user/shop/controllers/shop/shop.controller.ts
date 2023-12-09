@@ -42,9 +42,8 @@ export class ShopController {
     }
   }
 
-  // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['user'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['user'])
+  @UseGuards(RolesMiddleware)
   @Post('/getCart')
   async getCartUser(@Body() getDataItemDto: GetDataItemDto) {
     try {
@@ -57,9 +56,8 @@ export class ShopController {
     }
   }
 
-  // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['user'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['user'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   async addToCart(@Body() createCartItemDto: CreateCartItemDto) {
     try {
@@ -72,6 +70,8 @@ export class ShopController {
     }
   }
 
+  @SetMetadata('roles', ['user'])
+  @UseGuards(RolesMiddleware)
   @Post('/deleteCart')
   async deleteItemCart(@Body() deleteItemCart: DeleteCartParams) {
     try {
@@ -84,6 +84,8 @@ export class ShopController {
     }
   }
 
+  @SetMetadata('roles', ['user'])
+  @UseGuards(RolesMiddleware)
   @Post('/cart')
   @UseInterceptors(FileInterceptor('foto'))
   async orderShopUser(

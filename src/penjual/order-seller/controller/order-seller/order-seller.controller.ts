@@ -1,12 +1,23 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { GlobalDto, GlobalDtoFinish } from 'recipe/dto/Globa.dto';
 import { ChangeOrderStatusDto } from 'recipe/utils/orderProduct';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
 @Controller('order')
 export class OrderSellerController {
   constructor(private buyerHistoryService: BuyerHistoryService) {}
 
+  @SetMetadata('roles', ['penjual'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   async getDataOrderSeller(@Body() globalDto: GlobalDto) {
     try {
@@ -19,6 +30,8 @@ export class OrderSellerController {
     }
   }
 
+  @SetMetadata('roles', ['penjual'])
+  @UseGuards(RolesMiddleware)
   @Post('/status')
   async changeStatusOrder(@Body() changeOrderStatusDto: ChangeOrderStatusDto) {
     try {
@@ -34,6 +47,8 @@ export class OrderSellerController {
     }
   }
 
+  @SetMetadata('roles', ['penjual'])
+  @UseGuards(RolesMiddleware)
   @Post('/aprove')
   async aproveOrder(@Body() globaDto: GlobalDto) {
     try {
@@ -46,6 +61,8 @@ export class OrderSellerController {
     }
   }
 
+  @SetMetadata('roles', ['penjual'])
+  @UseGuards(RolesMiddleware)
   @Post('/decline')
   async declineOrder(@Body() globaDto: GlobalDto) {
     try {
@@ -58,6 +75,8 @@ export class OrderSellerController {
     }
   }
 
+  @SetMetadata('roles', ['penjual'])
+  @UseGuards(RolesMiddleware)
   @Post('/finish')
   async onGoingOrder(@Body() globaDto: GlobalDtoFinish) {
     try {

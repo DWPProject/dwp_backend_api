@@ -35,8 +35,8 @@ export class KontenController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   @UseInterceptors(FileInterceptor('gambar'))
   async createNewKonten(
@@ -54,8 +54,8 @@ export class KontenController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put('/:id')
   @UseInterceptors(FileInterceptor('gambar'))
   async updateKontem(

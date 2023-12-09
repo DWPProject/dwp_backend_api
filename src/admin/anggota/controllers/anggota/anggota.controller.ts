@@ -38,8 +38,8 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post()
   @UseInterceptors(FileInterceptor('foto'))
   async createAnggota(
@@ -57,8 +57,8 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Put(':id')
   @UseInterceptors(FileInterceptor('foto'))
   async updateAnggota(
@@ -81,8 +81,8 @@ export class AnggotaController {
   }
 
   // @UseGuards(AuthGuard)
-  // @SetMetadata('roles', ['admin'])
-  // @UseGuards(RolesMiddleware)
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Delete(':id')
   async deleteAnggota(@Param('id', ParseIntPipe) id: number) {
     try {

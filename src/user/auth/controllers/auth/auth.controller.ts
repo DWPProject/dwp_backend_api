@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from '../../service/auth/auth.service';
@@ -16,6 +17,7 @@ import {
 } from 'recipe/dto/User.dto';
 import { UpdateUserParams } from 'recipe/utils/User.utils';
 import { GlobalDto } from 'recipe/dto/Globa.dto';
+import { AuthGuard } from 'src/middleware/auth.middleware';
 
 @Controller('auth')
 export class AuthController {
@@ -34,6 +36,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/update')
   @UseInterceptors(FileInterceptor('foto'))
   async updateUser(
@@ -55,6 +58,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/forgotPassword')
   async forgotPassword(@Body() forgotPasswordDto: forgotPasswordDto) {
     try {
@@ -67,6 +71,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/profile')
   async getProfileUser(@Body() globalDto: GlobalDto) {
     try {

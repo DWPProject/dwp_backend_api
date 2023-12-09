@@ -1,6 +1,15 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { OverviewDto, ReportDto } from 'recipe/dto/Report.dto';
 import { OrderService } from 'src/admin/order/service/order/order.service';
+import { RolesMiddleware } from 'src/middleware/roles.middleware';
 import { BuyerHistoryService } from 'src/user/buyer-history/service/buyer-history/buyer-history.service';
 
 @Controller('overview')
@@ -10,6 +19,8 @@ export class OverviewController {
     private orderService: OrderService,
   ) {}
 
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/')
   async overviewAdmin(@Body() reportDto: OverviewDto) {
     try {
@@ -145,6 +156,8 @@ export class OverviewController {
     }
   }
 
+  @SetMetadata('roles', ['admin'])
+  @UseGuards(RolesMiddleware)
   @Post('/populer')
   async populerOrder(@Body() overviewDto: OverviewDto) {
     try {
