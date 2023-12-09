@@ -19,7 +19,7 @@ export class OverviewController {
     private orderService: OrderService,
   ) {}
 
-  @SetMetadata('roles', ['admin'])
+  @SetMetadata('roles', ['admin', 'penjual'])
   @UseGuards(RolesMiddleware)
   @Post('/')
   async overviewAdmin(@Body() reportDto: OverviewDto) {
