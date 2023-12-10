@@ -1,4 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
+import { BuyerHistory } from './BuyerHistory';
+import { OrderProduct } from './OrderProduct';
+import { User } from './Users';
 
 @Entity({ name: 'produk' })
 export class Produk {
@@ -25,4 +36,14 @@ export class Produk {
 
   @Column()
   kategori: string;
+
+  @ManyToMany(() => BuyerHistory, (buyerHistory) => buyerHistory.products)
+  buyerHistory: BuyerHistory[];
+
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+  public orderProduct: OrderProduct[];
+
+  @ManyToOne(() => User, (users) => users.produk)
+  @JoinColumn({ name: 'id_penjual' })
+  public user: User;
 }

@@ -8,11 +8,17 @@ export class Berita {
   @Column()
   judul: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   deskripsi: string;
 
   @Column()
   gambar: string;
+
+  @Column()
+  kategori: string;
+
+  @Column()
+  penulis: string;
 
   @Column()
   createdAt: Date;

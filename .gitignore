@@ -1,7 +1,14 @@
 # compiled output
 /dist
 /node_modules
+.dockerignore
+docker-compose.yml
+dockerfile
 .env
+/pgdata
+/template
+/recipe/template
+/images
 
 # Logs
 logs

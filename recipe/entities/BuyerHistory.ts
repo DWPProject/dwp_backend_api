@@ -1,4 +1,16 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
+import { Produk } from './Produk';
+import { OrderProduct } from './OrderProduct';
+import { User } from './Users';
 
 @Entity({ name: 'buyer_history' })
 export class BuyerHistory {
@@ -9,17 +21,37 @@ export class BuyerHistory {
   id_user: string;
 
   @Column()
-  id_produk: string;
-
-  @Column()
-  quantity: number;
-
-  @Column()
   status: string;
+
+  @Column()
+  note: string;
 
   @Column()
   payment: string;
 
+  @Column({ default: '' })
+  address: string;
+
+  @Column()
+  payment_status: boolean;
+
+  @Column({ default: '0' })
+  price: string;
+
+  @Column()
+  purchase: number;
+
   @Column()
   order_date: Date;
+
+  @ManyToMany(() => Produk, (product) => product.buyerHistory)
+  @JoinTable()
+  products: Produk[];
+
+  @ManyToOne(() => User, (user) => user.buyerHistories)
+  @JoinColumn({ name: 'id_user' })
+  user: User;
+
+  @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.buyerHistory)
+  public orderProduct: OrderProduct[];
 }
