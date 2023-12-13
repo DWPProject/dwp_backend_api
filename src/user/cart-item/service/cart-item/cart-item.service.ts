@@ -102,8 +102,8 @@ export class CartItemService {
     };
   }
 
-  async DeleteCartParams(id: string) {
-    const result = await this.cartItemRepository.delete(id);
+  async DeleteCartParams(user_id: string) {
+    const result = await this.cartItemRepository.delete({ user_id });
     if (result.affected === 0) {
       return false;
     }
