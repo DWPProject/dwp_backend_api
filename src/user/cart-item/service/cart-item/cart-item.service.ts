@@ -185,7 +185,7 @@ export class CartItemService {
         }
       }
 
-      await this.DeleteCartParams(user.id);
+      await this.DeleteCartParams(user.userId);
       return {
         statusCode: HttpStatus.OK,
         status: 'Success',
