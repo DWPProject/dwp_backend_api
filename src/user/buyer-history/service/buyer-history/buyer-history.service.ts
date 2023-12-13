@@ -439,6 +439,33 @@ export class BuyerHistoryService {
       data: result,
     };
   }
+  async orderHistoryNotProses(id: string) {
+    const result = await this.buyerHistoryRepo
+      .createQueryBuilder('buyer_history')
+      .select([
+        'produk.foto',
+        'produk.nama',
+        'order_product.quantity',
+        'buyer_history.status',
+        '(order_product.quantity * produk.harga) AS price',
+      ])
+      .leftJoin(
+        OrderProduct,
+        'order_product',
+        'buyer_history.id = order_product.buyerHistoryId',
+      )
+      .leftJoin(Produk, 'produk', 'order_product.productId = produk.id')
+      .where('buyer_history.id_user = :id', { id })
+      .andWhere('buyer_history.status = :status', { status: 'Belum diProses' })
+      .getRawMany();
+
+    return {
+      statusCode: HttpStatus.OK,
+      status: 'Success',
+      message: 'Success Get On Proses History',
+      data: result,
+    };
+  }
 
   async orderHistoryDecline(id: string) {
     const result = await this.buyerHistoryRepo
