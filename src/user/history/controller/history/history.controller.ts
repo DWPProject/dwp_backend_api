@@ -45,6 +45,20 @@ export class HistoryController {
 
   @SetMetadata('roles', ['user'])
   @UseGuards(RolesMiddleware)
+  @Post('/onproses')
+  async getDataHistoryOnProses(@Body() globalDto: GlobalDto) {
+    try {
+      return await this.buyerHistoryService.orderHistoryNotProses(globalDto.id);
+    } catch (error) {
+      return {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: `${error}`,
+      };
+    }
+  }
+
+  @SetMetadata('roles', ['user'])
+  @UseGuards(RolesMiddleware)
   @Post('/ongoing')
   async getDataHistoryOnGoing(@Body() globalDto: GlobalDto) {
     try {

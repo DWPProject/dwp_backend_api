@@ -102,6 +102,14 @@ export class CartItemService {
     };
   }
 
+  async DeleteCartParams(user_id: string) {
+    const result = await this.cartItemRepository.delete({ user_id });
+    if (result.affected === 0) {
+      return false;
+    }
+    return true;
+  }
+
   async orderNow(
     foto: Express.Multer.File,
     createOrderParams: CreateOrderUserCartParams,
@@ -176,6 +184,8 @@ export class CartItemService {
           }
         }
       }
+
+      await this.DeleteCartParams(user.userId);
       return {
         statusCode: HttpStatus.OK,
         status: 'Success',
